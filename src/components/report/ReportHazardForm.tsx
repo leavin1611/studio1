@@ -13,6 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Upload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { useHazardReports } from '@/context/HazardReportsContext';
 
 const reportSchema = z.object({
   hazardType: z.string().min(1, 'Hazard type is required'),
@@ -28,15 +29,39 @@ const reportSchema = z.object({
 
 export function ReportHazardForm() {
     const { toast } = useToast();
+    const { addReport } = useHazardReports();
     const form = useForm<z.infer<typeof reportSchema>>({
         resolver: zodResolver(reportSchema),
         defaultValues: {
             consent: false,
+            hazardType: '',
+            severity: '',
+            location: '',
+            date: '',
+            time: '',
+            description: ''
         },
     });
 
     function onSubmit(values: z.infer<typeof reportSchema>) {
-        console.log(values);
+        const newReport = {
+            id: Date.now(),
+            title: `${values.hazardType.charAt(0).toUpperCase() + values.hazardType.slice(1)} in ${values.location}`,
+            user: "Anonymous",
+            timeAgo: "Just now",
+            description: values.description,
+            tags: [values.hazardType, values.location],
+            verified: false,
+            type: values.hazardType as any,
+            severity: values.severity as any,
+            location: values.location,
+            date: new Date(`${values.date}T${values.time}`).toISOString(),
+            imageUrl: "https://picsum.photos/seed/" + Date.now() + "/400/200",
+            imageHint: `${values.hazardType} ${values.location}`,
+            lat: 11.23, // Placeholder lat
+            lng: 78.34, // placeholder lng
+        };
+        addReport(newReport);
         toast({
             title: "Report Submitted!",
             description: "Thank you for contributing to community safety.",

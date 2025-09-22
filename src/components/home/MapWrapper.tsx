@@ -1,25 +1,25 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { landPoints } from '@/lib/data';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
+import { useHazardReports } from '@/context/HazardReportsContext';
 
 export function MapWrapper() {
   const mapRef = useRef<HTMLDivElement>(null);
   const isMapLoaded = useRef(false);
+  const { reports } = useHazardReports();
 
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyAwNOYjQTLk42O-JpKHXGvxkraaMU8Oldc";
 
   useEffect(() => {
-    if (isMapLoaded.current) return;
 
     const initMap = () => {
       if (window.google && mapRef.current) {
         const map = new window.google.maps.Map(mapRef.current, {
           center: { lat: 10.5, lng: 78.5 },
-          zoom: 6,
-          styles: [ // Adding a subtle, professional map style
+          zoom: 5,
+          styles: [ 
             { elementType: "geometry", stylers: [{ color: "#f5f5f5" }] },
             { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
             { elementType: "labels.text.fill", stylers: [{ color: "#616161" }] },
@@ -42,11 +42,11 @@ export function MapWrapper() {
           ]
         });
 
-        landPoints.forEach(point => {
+        reports.forEach(report => {
           new window.google.maps.Marker({
-            position: { lat: point.lat, lng: point.lng },
+            position: { lat: report.lat, lng: report.lng },
             map: map,
-            title: point.name,
+            title: report.title,
           });
         });
         isMapLoaded.current = true;
@@ -65,7 +65,7 @@ export function MapWrapper() {
     } else {
       initMap();
     }
-  }, [API_KEY]);
+  }, [API_KEY, reports]);
 
   return (
       <Card className="w-full h-[600px] overflow-hidden shadow-lg relative">

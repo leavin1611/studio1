@@ -12,6 +12,8 @@ export type HazardReport = {
   date: string;
   imageUrl: string;
   imageHint: string;
+  lat: number;
+  lng: number;
 };
 
 export const hazardReports: HazardReport[] = [
@@ -29,6 +31,8 @@ export const hazardReports: HazardReport[] = [
     date: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
     imageUrl: "https://picsum.photos/seed/report1/400/200",
     imageHint: "waves ocean",
+    lat: 13.05,
+    lng: 80.28,
   },
   {
     id: 2,
@@ -44,6 +48,8 @@ export const hazardReports: HazardReport[] = [
     date: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
     imageUrl: "https://picsum.photos/seed/report2/400/200",
     imageHint: "flood ocean",
+    lat: 18.91,
+    lng: 72.82,
   },
     {
     id: 3,
@@ -59,6 +65,8 @@ export const hazardReports: HazardReport[] = [
     date: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
     imageUrl: "https://picsum.photos/seed/report3/400/200",
     imageHint: "stormy sea",
+    lat: 20.50,
+    lng: 86.10,
     },
       {
     id: 4,
@@ -68,12 +76,14 @@ export const hazardReports: HazardReport[] = [
     description: "Strong rip currents reported near Visakhapatnam. Swimming is not recommended.",
     tags: ["Dangerous Currents", "Visakhapatnam"],
     verified: true,
-type: "currents",
+    type: "currents",
     severity: "high",
     location: "Visakhapatnam",
     date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
     imageUrl: "https://picsum.photos/seed/report4/400/200",
     imageHint: "ocean current",
+    lat: 17.70,
+    lng: 83.30,
     },
 ];
 

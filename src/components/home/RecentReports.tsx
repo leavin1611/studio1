@@ -1,9 +1,10 @@
 'use client';
 
-import { hazardReports } from '@/lib/data';
 import { HazardReportCard } from '../common/HazardReportCard';
+import { useHazardReports } from '@/context/HazardReportsContext';
 
 export function RecentReports() {
+  const { reports } = useHazardReports();
   return (
     <section id="posts" className="py-12 md:py-20 bg-white">
       <div className="container mx-auto px-4">
@@ -17,7 +18,7 @@ export function RecentReports() {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {hazardReports.slice(0, 4).map((report) => (
+          {reports.slice(0, 4).map((report) => (
             <HazardReportCard key={report.id} report={report} />
           ))}
         </div>
