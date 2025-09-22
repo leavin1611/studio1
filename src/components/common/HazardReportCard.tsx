@@ -1,3 +1,4 @@
+
 'use client';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
@@ -12,10 +13,17 @@ import { AuthenticityDetailsDialog } from './AuthenticityDetailsDialog';
 
 type HazardReportCardProps = {
   report: HazardReport;
+  onViewDetails?: () => void;
 };
 
-export function HazardReportCard({ report }: HazardReportCardProps) {
+export function HazardReportCard({ report, onViewDetails }: HazardReportCardProps) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleOpenDialog = () => {
+        setIsDialogOpen(true);
+        onViewDetails?.();
+    };
+
 
   return (
     <>
@@ -59,7 +67,7 @@ export function HazardReportCard({ report }: HazardReportCardProps) {
           </div>
         </div>
         
-        <Button variant="outline" className="w-full" onClick={() => setIsDialogOpen(true)}>View Details</Button>
+        <Button variant="outline" className="w-full" onClick={handleOpenDialog}>View Details</Button>
       </CardContent>
     </Card>
     {isDialogOpen && (

@@ -1,12 +1,96 @@
 
 'use client';
 
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { HazardReportCard } from '../common/HazardReportCard';
 import { useHazardReports } from '@/context/HazardReportsContext';
 import { Skeleton } from '../ui/skeleton';
+import type { HazardReport } from '@/lib/data';
+
+function shuffleArray(array: any[]) {
+  let currentIndex = array.length,  randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex !== 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
+
 
 export function RecentReports() {
-  const { reports, loading } = useHazardReports();
+  const { reports: allReports, loading } = useHazardReports();
+  const [shuffledReports, setShuffledReports] = useState<HazardReport[]>([]);
+  const [displayedReports, setDisplayedReports] = useState<HazardReport[]>([]);
+  const [isPaused, setIsPaused] = useState(false);
+  const currentIndex = useRef(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (allReports.length > 0) {
+      setShuffledReports(shuffleArray([...allReports]));
+    }
+  }, [allReports]);
+
+  const advanceReports = useCallback(() => {
+    if (shuffledReports.length === 0) return;
+
+    const nextIndex = (currentIndex.current + 4) % shuffledReports.length;
+    const newReports = [];
+    for (let i = 0; i < 4; i++) {
+        newReports.push(shuffledReports[(nextIndex + i) % shuffledReports.length]);
+    }
+    
+    setDisplayedReports(newReports);
+    currentIndex.current = nextIndex;
+  }, [shuffledReports]);
+
+  useEffect(() => {
+      if(shuffledReports.length > 0 && displayedReports.length === 0) {
+          advanceReports();
+      }
+  }, [shuffledReports, displayedReports, advanceReports]);
+
+
+  useEffect(() => {
+    if (shuffledReports.length > 0 && !isPaused) {
+      intervalRef.current = setInterval(advanceReports, 15000);
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    }
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [shuffledReports, isPaused, advanceReports]);
+
+  const handleViewDetails = () => {
+    setIsPaused(true);
+    const checkDialog = setInterval(() => {
+      const dialogs = document.querySelectorAll('[role="dialog"]');
+      let oneOpen = false;
+      dialogs.forEach(d => {
+        if (d.hasAttribute('data-state') && d.getAttribute('data-state') === 'open') {
+          oneOpen = true;
+        }
+      });
+      if (!oneOpen) {
+        setIsPaused(false);
+        clearInterval(checkDialog);
+      }
+    }, 500);
+  };
   
   if (loading) {
     return (
@@ -22,7 +106,7 @@ export function RecentReports() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
+            {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="space-y-4">
                 <Skeleton className="h-48 w-full" />
                 <Skeleton className="h-6 w-3/4" />
@@ -49,8 +133,8 @@ export function RecentReports() {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {reports.slice(0, 8).map((report) => (
-            <HazardReportCard key={report.id} report={report} />
+          {displayedReports.map((report) => (
+            <HazardReportCard key={report.id} report={report} onViewDetails={handleViewDetails} />
           ))}
         </div>
       </div>
