@@ -10,10 +10,14 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Upload, BellRing } from 'lucide-react';
+import { Upload, BellRing, Bot, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { useHazardReports } from '@/context/HazardReportsContext';
+import { analyzeReportImage } from '@/ai/flows/analyze-report-image';
+import { useState } from 'react';
+import Image from 'next/image';
+import { Skeleton } from '../ui/skeleton';
 
 const reportSchema = z.object({
   hazardType: z.string().min(1, 'Hazard type is required'),
@@ -30,6 +34,9 @@ const reportSchema = z.object({
 export function ReportHazardForm() {
     const { toast } = useToast();
     const { addReport } = useHazardReports();
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+
     const form = useForm<z.infer<typeof reportSchema>>({
         resolver: zodResolver(reportSchema),
         defaultValues: {
@@ -43,8 +50,41 @@ export function ReportHazardForm() {
         },
     });
 
+    const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        setIsAnalyzing(true);
+        setUploadedImage(URL.createObjectURL(file));
+
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async () => {
+            const photoDataUri = reader.result as string;
+
+            try {
+                const result = await analyzeReportImage({ photoDataUri });
+                form.setValue('hazardType', result.hazardType);
+                form.setValue('severity', result.severity);
+                form.setValue('description', result.description);
+                toast({
+                    title: "🤖 AI Analysis Complete",
+                    description: "The form has been pre-filled based on your image.",
+                });
+            } catch (error) {
+                console.error("Image analysis failed:", error);
+                toast({
+                    variant: "destructive",
+                    title: "AI Analysis Failed",
+                    description: "Could not analyze the image. Please fill out the form manually.",
+                });
+            } finally {
+                setIsAnalyzing(false);
+            }
+        };
+    };
+
     function onSubmit(values: z.infer<typeof reportSchema>) {
-        // Simulate a chance of the report being instantly verified
         const isVerified = Math.random() > 0.5;
 
         const newReport = {
@@ -59,10 +99,10 @@ export function ReportHazardForm() {
             severity: values.severity as any,
             location: values.location,
             date: new Date(`${values.date}T${values.time}`).toISOString(),
-            imageUrl: "https://picsum.photos/seed/" + Date.now() + "/400/200",
+            imageUrl: uploadedImage || "https://picsum.photos/seed/" + Date.now() + "/400/200",
             imageHint: `${values.hazardType} ${values.location}`,
-            lat: 11.23 + (Math.random() - 0.5) * 5, // Placeholder lat with randomness
-            lng: 78.34 + (Math.random() - 0.5) * 5, // placeholder lng with randomness
+            lat: 11.23 + (Math.random() - 0.5) * 5,
+            lng: 78.34 + (Math.random() - 0.5) * 5,
         };
         addReport(newReport);
         
@@ -82,6 +122,7 @@ export function ReportHazardForm() {
         }
 
         form.reset();
+        setUploadedImage(null);
     }
 
   return (
@@ -99,11 +140,47 @@ export function ReportHazardForm() {
         <CardContent className="p-6 md:p-8">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <div>
+                  <Label>Upload Media & Analyze with AI</Label>
+                  <div className="mt-2 flex justify-center rounded-lg border border-dashed border-input px-6 py-10 relative">
+                    {uploadedImage && !isAnalyzing && (
+                        <Image src={uploadedImage} alt="Uploaded hazard" layout="fill" className="object-contain rounded-lg" />
+                    )}
+                    {isAnalyzing && (
+                        <div className="absolute inset-0 bg-background/80 flex flex-col items-center justify-center rounded-lg">
+                            <Bot className="h-12 w-12 text-primary animate-bounce" />
+                            <p className="mt-4 text-sm font-semibold text-primary">AI is analyzing your image...</p>
+                        </div>
+                    )}
+                    <div className="text-center">
+                      <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
+                      <div className="mt-4 flex text-sm leading-6 text-muted-foreground">
+                        <Label
+                          htmlFor="file-upload"
+                          className="relative cursor-pointer rounded-md bg-background font-semibold text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:text-primary/80"
+                        >
+                          <span>Click to upload an image</span>
+                          <Input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleImageUpload} accept="image/*" />
+                        </Label>
+                      </div>
+                      <p className="text-xs leading-5 text-muted-foreground">The AI will pre-fill the form for you.</p>
+                    </div>
+                  </div>
+                </div>
+                
+                {isAnalyzing ? (
+                    <div className="space-y-6 pt-4">
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-10 w-full" />
+                        <Skeleton className="h-24 w-full" />
+                    </div>
+                ) : (
+                <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField control={form.control} name="hazardType" render={({ field }) => (
                         <FormItem>
                             <FormLabel>Hazard Type</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} value={field.value}>
                                 <FormControl><SelectTrigger><SelectValue placeholder="Select hazard type" /></SelectTrigger></FormControl>
                                 <SelectContent>
                                     <SelectItem value="tsunami">Tsunami</SelectItem>
@@ -121,7 +198,7 @@ export function ReportHazardForm() {
                      <FormField control={form.control} name="severity" render={({ field }) => (
                         <FormItem>
                             <FormLabel>Severity Level</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} value={field.value}>
                                 <FormControl><SelectTrigger><SelectValue placeholder="Select severity level" /></SelectTrigger></FormControl>
                                 <SelectContent>
                                     <SelectItem value="low">Low - Minor issue</SelectItem>
@@ -134,6 +211,17 @@ export function ReportHazardForm() {
                         </FormItem>
                     )} />
                 </div>
+
+                <FormField control={form.control} name="description" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel className="flex items-center gap-2">
+                           Description <Sparkles className="h-4 w-4 text-yellow-500" />
+                           <span className="text-xs text-muted-foreground">(auto-filled by AI)</span>
+                        </FormLabel>
+                        <FormControl><Textarea rows={4} placeholder="Describe the hazard in detail" {...field} /></FormControl>
+                        <FormMessage />
+                    </FormItem>
+                )} />
 
                 <FormField control={form.control} name="location" render={({ field }) => (
                     <FormItem>
@@ -160,34 +248,6 @@ export function ReportHazardForm() {
                     )} />
                 </div>
 
-                <FormField control={form.control} name="description" render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Description</FormLabel>
-                        <FormControl><Textarea rows={4} placeholder="Describe the hazard in detail" {...field} /></FormControl>
-                        <FormMessage />
-                    </FormItem>
-                )} />
-              
-                <div>
-                  <Label>Upload Media (Optional)</Label>
-                  <div className="mt-2 flex justify-center rounded-lg border border-dashed border-input px-6 py-10">
-                    <div className="text-center">
-                      <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
-                      <div className="mt-4 flex text-sm leading-6 text-muted-foreground">
-                        <Label
-                          htmlFor="file-upload"
-                          className="relative cursor-pointer rounded-md bg-background font-semibold text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:text-primary/80"
-                        >
-                          <span>Click to upload</span>
-                          <Input id="file-upload" name="file-upload" type="file" className="sr-only" />
-                        </Label>
-                        <p className="pl-1">photos or videos</p>
-                      </div>
-                      <p className="text-xs leading-5 text-muted-foreground">Max file size: 10MB</p>
-                    </div>
-                  </div>
-                </div>
-
                 <FormField control={form.control} name="consent" render={({ field }) => (
                     <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                         <FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl>
@@ -199,6 +259,8 @@ export function ReportHazardForm() {
                 )} />
               
               <Button type="submit" className="w-full">Submit Report</Button>
+              </>
+              )}
             </form>
           </Form>
         </CardContent>
