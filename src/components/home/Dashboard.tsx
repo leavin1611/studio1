@@ -52,9 +52,12 @@ export function Dashboard() {
             <MapWrapper reports={reports} />
           </div>
         </div>
-         <div className="text-center mt-12">
+         <div className="text-center mt-12 space-x-4">
           <Button asChild size="lg">
-            <Link href="/dashboard">View Full Dashboard</Link>
+            <Link href="/dashboard">View Full Report Dashboard</Link>
+          </Button>
+           <Button asChild size="lg" variant="outline">
+            <Link href="/social-intelligence">View Social Intelligence</Link>
           </Button>
         </div>
       </div>

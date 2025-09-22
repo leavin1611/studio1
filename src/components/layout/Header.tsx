@@ -16,6 +16,7 @@ export function Header() {
   const navLinks = [
     { href: '/', label: t.nav.home },
     { href: '/dashboard', label: t.nav.dashboard },
+    { href: '/social-intelligence', label: 'Social Intel' },
     { href: '/report', label: t.nav.reportHazard },
     { href: '#posts', label: t.nav.posts },
     { href: '#feeds', label: t.nav.feeds },
@@ -26,7 +27,7 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex h-20 items-center justify-between">
           <Logo />
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
@@ -37,7 +38,7 @@ export function Header() {
               </Link>
             ))}
           </nav>
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10" asChild>
                 <Link href="/login">{t.nav.login}</Link>
             </Button>
@@ -46,7 +47,7 @@ export function Header() {
             </Button>
             <LanguageSwitcher />
           </div>
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="text-white">
