@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Analyzes a collection of social media posts to identify trends, sentiment, and key topics.
@@ -22,12 +23,12 @@ const PostSchema = z.object({
   image_url: z.string(),
 });
 
-export const AnalyzeSocialMediaTrendsInputSchema = z.object({
+const AnalyzeSocialMediaTrendsInputSchema = z.object({
   posts: z.array(PostSchema),
 });
 export type AnalyzeSocialMediaTrendsInput = z.infer<typeof AnalyzeSocialMediaTrendsInputSchema>;
 
-export const AnalyzeSocialMediaTrendsOutputSchema = z.object({
+const AnalyzeSocialMediaTrendsOutputSchema = z.object({
   totalMentions: z.number().describe('The total number of social media posts analyzed.'),
   sentiment: z.object({
     positive: z.number().describe('The count of posts with a positive sentiment.'),
@@ -53,23 +54,19 @@ export type AnalyzeSocialMediaTrendsOutput = z.infer<typeof AnalyzeSocialMediaTr
 export async function analyzeSocialMediaTrends(
   input: AnalyzeSocialMediaTrendsInput
 ): Promise<AnalyzeSocialMediaTrendsOutput> {
-  return analyzeSocialMediaTrendsFlow(input);
-}
+    const analyzeSocialMediaTrendsFlow = ai.defineFlow(
+    {
+        name: 'analyzeSocialMediaTrendsFlow',
+        inputSchema: AnalyzeSocialMediaTrendsInputSchema,
+        outputSchema: AnalyzeSocialMediaTrendsOutputSchema,
+    },
+    async ({ posts }) => {
+        const allText = posts.map(p => `Post by @${p.user_handle} (${p.likes} likes): ${p.comments} ${p.hashtags}`).join('\n---\n');
 
-
-const analyzeSocialMediaTrendsFlow = ai.defineFlow(
-  {
-    name: 'analyzeSocialMediaTrendsFlow',
-    inputSchema: AnalyzeSocialMediaTrendsInputSchema,
-    outputSchema: AnalyzeSocialMediaTrendsOutputSchema,
-  },
-  async ({ posts }) => {
-    const allText = posts.map(p => `Post by @${p.user_handle} (${p.likes} likes): ${p.comments} ${p.hashtags}`).join('\n---\n');
-
-    const prompt = ai.definePrompt({
-        name: 'socialMediaTrendAnalysisPrompt',
-        output: { schema: AnalyzeSocialMediaTrendsOutputSchema },
-        prompt: `You are a social media analyst for a disaster management agency. Analyze the following batch of social media posts related to ocean hazards. Provide a comprehensive analysis of the trends, sentiment, and urgency.
+        const prompt = ai.definePrompt({
+            name: 'socialMediaTrendAnalysisPrompt',
+            output: { schema: AnalyzeSocialMediaTrendsOutputSchema },
+            prompt: `You are a social media analyst for a disaster management agency. Analyze the following batch of social media posts related to ocean hazards. Provide a comprehensive analysis of the trends, sentiment, and urgency.
 
 Your task is to populate all fields in the provided JSON output schema based on the posts.
 
@@ -82,9 +79,12 @@ Your task is to populate all fields in the provided JSON output schema based on 
 Here is the batch of social media posts to analyze:
 
 {{{posts}}}`,
-    });
+        });
 
-    const { output } = await prompt({ posts: allText });
-    return output!;
-  }
-);
+        const { output } = await prompt({ posts: allText });
+        return output!;
+    }
+    );
+
+  return analyzeSocialMediaTrendsFlow(input);
+}
