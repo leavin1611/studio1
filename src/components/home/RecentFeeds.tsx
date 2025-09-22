@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { FeedCard } from '../common/FeedCard';
 import { Skeleton } from '../ui/skeleton';
 
@@ -30,39 +30,74 @@ export function RecentFeeds() {
   const [displayedFeeds, setDisplayedFeeds] = useState<Feed[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    async function loadFeeds() {
-      try {
-        const response = await fetch('/ocean_data.json');
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
-        const shuffledData = shuffleArray(data);
-        setAllFeeds(shuffledData);
-        setDisplayedFeeds(shuffledData.slice(0, 4));
-      } catch (err) {
-        console.error('Error loading feeds:', err);
-      } finally {
-        setLoading(false);
-      }
+  const fetchAndSetFeeds = useCallback(async () => {
+    try {
+      const response = await fetch('/ocean_data.json');
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      const shuffledData = shuffleArray(data);
+      setAllFeeds(shuffledData);
+      setDisplayedFeeds(shuffledData.slice(0, 4));
+    } catch (err) {
+      console.error('Error loading feeds:', err);
+    } finally {
+      setLoading(false);
     }
-    loadFeeds();
   }, []);
 
-  useEffect(() => {
+  const advanceFeeds = useCallback(() => {
     if (allFeeds.length === 0) return;
-
-    const interval = setInterval(() => {
-      setCurrentIndex(prevIndex => {
-        const nextIndex = prevIndex + 4 >= allFeeds.length ? 0 : prevIndex + 4;
-        const newFeeds = allFeeds.slice(nextIndex, nextIndex + 4);
-        setDisplayedFeeds(newFeeds);
-        return nextIndex;
-      });
-    }, 15000); // 15 seconds
-
-    return () => clearInterval(interval); // Cleanup on component unmount
+    setCurrentIndex(prevIndex => {
+      const nextIndex = prevIndex + 4 >= allFeeds.length ? 0 : prevIndex + 4;
+      const newFeeds = allFeeds.slice(nextIndex, nextIndex + 4);
+      setDisplayedFeeds(newFeeds);
+      return nextIndex;
+    });
   }, [allFeeds]);
+
+  useEffect(() => {
+    fetchAndSetFeeds();
+  }, [fetchAndSetFeeds]);
+
+  useEffect(() => {
+    if (allFeeds.length > 0 && !isPaused) {
+      intervalRef.current = setInterval(advanceFeeds, 15000);
+    } else {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    }
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [allFeeds, isPaused, advanceFeeds]);
+
+  const handleViewDetails = () => {
+    setIsPaused(true);
+    // When the dialog is closed, we need to resume.
+    // The dialog's onOpenChange will be used, but since that's in a child,
+    // we'll set a timeout to resume automatically as a fallback.
+    // The main mechanism will be a callback passed to the dialog.
+    // In this simplified setup, we'll just pause. The dialog closing will un-pause.
+    const checkDialog = setInterval(() => {
+        const dialogs = document.querySelectorAll('[role="dialog"]');
+        let oneOpen = false;
+        dialogs.forEach(d => {
+            if(d.hasAttribute('data-state') && d.getAttribute('data-state') === 'open') {
+                oneOpen = true;
+            }
+        })
+        if (!oneOpen) {
+            setIsPaused(false);
+            clearInterval(checkDialog);
+        }
+    }, 500);
+  };
 
   return (
     <section id="feeds" className="py-12 md:py-20">
@@ -80,7 +115,7 @@ export function RecentFeeds() {
           {loading ? (
             Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-96 w-full rounded-xl" />)
           ) : (
-            displayedFeeds.map((feed) => <FeedCard key={feed.id} feed={feed} />)
+            displayedFeeds.map((feed) => <FeedCard key={feed.id} feed={feed} onViewDetails={handleViewDetails} />)
           )}
         </div>
       </div>
