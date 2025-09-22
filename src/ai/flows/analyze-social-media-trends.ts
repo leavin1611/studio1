@@ -9,17 +9,17 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { z } from 'zod';
 
 // Define the shape of a single social media post
 const PostSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   user_handle: z.string(),
   hazard_type: z.string(),
   location_name: z.string(),
-  comments: z.string(),
+  comments: z.string().optional(),
   likes: z.number(),
-  hashtags: z.string(),
+  hashtags: z.string().optional(),
   image_url: z.string(),
 });
 
@@ -61,7 +61,7 @@ export async function analyzeSocialMediaTrends(
         outputSchema: AnalyzeSocialMediaTrendsOutputSchema,
     },
     async ({ posts }) => {
-        const allText = posts.map(p => `Post by @${p.user_handle} (${p.likes} likes): ${p.comments} ${p.hashtags}`).join('\n---\n');
+        const allText = posts.map(p => `Post by @${p.user_handle} (${p.likes} likes): ${p.comments || ''} ${p.hashtags || ''}`).join('\n---\n');
 
         const prompt = ai.definePrompt({
             name: 'socialMediaTrendAnalysisPrompt',
