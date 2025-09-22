@@ -6,16 +6,21 @@ import { Logo } from '@/components/common/Logo';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
 import { Menu } from 'lucide-react';
-
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/report', label: 'Report Hazard' },
-  { href: '#posts', label: 'Posts' },
-  { href: '#feeds', label: 'Feeds' },
-];
+import { useLanguage } from '@/context/LanguageContext';
+import { translations } from '@/lib/i18n';
 
 export function Header() {
+  const { language } = useLanguage();
+  const t = translations[language];
+
+  const navLinks = [
+    { href: '/', label: t.nav.home },
+    { href: '/dashboard', label: t.nav.dashboard },
+    { href: '/report', label: t.nav.reportHazard },
+    { href: '#posts', label: t.nav.posts },
+    { href: '#feeds', label: t.nav.feeds },
+  ];
+
   return (
     <header className="sticky top-0 z-50 bg-gradient-to-r from-primary to-[#357ABD] shadow-md">
       <div className="container mx-auto px-4">
@@ -34,10 +39,10 @@ export function Header() {
           </nav>
           <div className="hidden md:flex items-center gap-4">
             <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10" asChild>
-                <Link href="/login">Login</Link>
+                <Link href="/login">{t.nav.login}</Link>
             </Button>
             <Button variant="default" className="bg-white text-primary hover:bg-white/90" asChild>
-                <Link href="/signup">Sign Up</Link>
+                <Link href="/signup">{t.nav.signUp}</Link>
             </Button>
             <LanguageSwitcher />
           </div>
@@ -63,10 +68,10 @@ export function Header() {
                 </nav>
                 <div className="flex flex-col gap-4">
                     <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10" asChild>
-                        <Link href="/login">Login</Link>
+                        <Link href="/login">{t.nav.login}</Link>
                     </Button>
                     <Button variant="default" className="bg-white text-primary hover:bg-white/90" asChild>
-                        <Link href="/signup">Sign Up</Link>
+                        <Link href="/signup">{t.nav.signUp}</Link>
                     </Button>
                     <LanguageSwitcher />
                 </div>

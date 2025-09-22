@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,20 +8,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, Globe } from 'lucide-react';
-
-const languages = [
-    { code: 'en', name: 'English' },
-    { code: 'hi', name: 'हिंदी' },
-    { code: 'ta', name: 'தமிழ்' },
-    { code: 'te', name: 'తెలుగు' },
-    { code: 'bn', name: 'বাংলা' },
-    { code: 'ml', name: 'മലയാളം' },
-    { code: 'mr', name: 'मराठी' },
-    { code: 'kn', name: 'ಕನ್ನಡ' },
-];
+import { useLanguage } from '@/context/LanguageContext';
+import { languages } from '@/lib/i18n';
 
 export function LanguageSwitcher() {
-  const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
+  const { language, setLanguage } = useLanguage();
+
+  const selectedLanguage = languages.find((lang) => lang.code === language) || languages[0];
 
   return (
     <DropdownMenu>
@@ -37,7 +29,7 @@ export function LanguageSwitcher() {
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onSelect={() => setSelectedLanguage(lang)}
+            onSelect={() => setLanguage(lang.code)}
             className="cursor-pointer hover:!bg-primary-foreground/10 focus:!bg-primary-foreground/10"
           >
             {lang.name}
