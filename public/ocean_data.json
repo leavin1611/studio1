@@ -1,0 +1,43 @@
+
+[
+  {
+    "id": 1,
+    "user_handle": "coastal_life",
+    "hazard_type": "High Tide",
+    "location_name": "Goa",
+    "comments": "High tide in Goa is no joke today! Water's reaching the shacks. ||| Stay safe everyone!",
+    "likes": 125,
+    "hashtags": "#Goa #HighTide #Ocean",
+    "image_url": "https://picsum.photos/seed/feed1/400/300"
+  },
+  {
+    "id": 2,
+    "user_handle": "surfer_dude_88",
+    "hazard_type": "Rip Current",
+    "location_name": "Puducherry",
+    "comments": "Heads up surfers! Strong rip currents at Serenity Beach. Be careful out there. ||| Saw a couple people get into trouble.",
+    "likes": 78,
+    "hashtags": "#Puducherry #Surfing #RipCurrent",
+    "image_url": "https://picsum.photos/seed/feed2/400/300"
+  },
+  {
+    "id": 3,
+    "user_handle": "kerala_fisher",
+    "hazard_type": "Swell Surge",
+    "location_name": "Kovalam",
+    "comments": "Unusual swell surge observed near Kovalam. Boats are being secured. ||| Haven't seen waves like this in a while.",
+    "likes": 210,
+    "hashtags": "#Kerala #Fishing #SwellSurge",
+    "image_url": "https://picsum.photos/seed/feed3/400/300"
+  },
+  {
+    "id": 4,
+    "user_handle": "mumbai_updates",
+    "hazard_type": "Coastal Flooding",
+    "location_name": "Mumbai",
+    "comments": "Waterlogging reported at Marine Drive due to high tide and rain. Traffic is a mess. ||| Avoid the area if you can.",
+    "likes": 340,
+    "hashtags": "#MumbaiRains #MarineDrive #Flooding",
+    "image_url": "https://picsum.photos/seed/feed4/400/300"
+  }
+]

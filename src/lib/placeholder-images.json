@@ -1,3 +1,53 @@
+
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "report1",
+      "description": "High waves crashing on a beach.",
+      "imageUrl": "https://picsum.photos/seed/report1/400/200",
+      "imageHint": "waves ocean"
+    },
+    {
+      "id": "report2",
+      "description": "A flooded coastal city street.",
+      "imageUrl": "https://picsum.photos/seed/report2/400/200",
+      "imageHint": "flood ocean"
+    },
+    {
+      "id": "report3",
+      "description": "Dark storm clouds over a turbulent sea.",
+      "imageUrl": "https://picsum.photos/seed/report3/400/200",
+      "imageHint": "stormy sea"
+    },
+    {
+      "id": "report4",
+      "description": "Swirling water indicating a strong current.",
+      "imageUrl": "https://picsum.photos/seed/report4/400/200",
+      "imageHint": "ocean current"
+    },
+    {
+      "id": "feed1",
+      "description": "A beach in Goa with high tide.",
+      "imageUrl": "https://picsum.photos/seed/feed1/400/300",
+      "imageHint": "beach tide"
+    },
+    {
+      "id": "feed2",
+      "description": "A surfer riding a wave.",
+      "imageUrl": "https://picsum.photos/seed/feed2/400/300",
+      "imageHint": "surfer wave"
+    },
+    {
+      "id": "feed3",
+      "description": "Fishing boats docked in a harbor.",
+      "imageUrl": "https://picsum.photos/seed/feed3/400/300",
+      "imageHint": "fishing boats"
+    },
+    {
+      "id": "feed4",
+      "description": "City street with cars driving through water.",
+      "imageUrl": "https://picsum.photos/seed/feed4/400/300",
+      "imageHint": "city flood"
+    }
+  ]
 }
