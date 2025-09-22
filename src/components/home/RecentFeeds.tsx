@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -15,9 +16,20 @@ type Feed = {
   image_url: string;
 };
 
+// Function to shuffle an array
+function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 export function RecentFeeds() {
-  const [feeds, setFeeds] = useState<Feed[]>([]);
+  const [allFeeds, setAllFeeds] = useState<Feed[]>([]);
+  const [displayedFeeds, setDisplayedFeeds] = useState<Feed[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     async function loadFeeds() {
@@ -25,7 +37,9 @@ export function RecentFeeds() {
         const response = await fetch('/ocean_data.json');
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
-        setFeeds(data);
+        const shuffledData = shuffleArray(data);
+        setAllFeeds(shuffledData);
+        setDisplayedFeeds(shuffledData.slice(0, 4));
       } catch (err) {
         console.error('Error loading feeds:', err);
       } finally {
@@ -34,6 +48,21 @@ export function RecentFeeds() {
     }
     loadFeeds();
   }, []);
+
+  useEffect(() => {
+    if (allFeeds.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex(prevIndex => {
+        const nextIndex = prevIndex + 4 >= allFeeds.length ? 0 : prevIndex + 4;
+        const newFeeds = allFeeds.slice(nextIndex, nextIndex + 4);
+        setDisplayedFeeds(newFeeds);
+        return nextIndex;
+      });
+    }, 15000); // 15 seconds
+
+    return () => clearInterval(interval); // Cleanup on component unmount
+  }, [allFeeds]);
 
   return (
     <section id="feeds" className="py-12 md:py-20">
@@ -51,7 +80,7 @@ export function RecentFeeds() {
           {loading ? (
             Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-96 w-full rounded-xl" />)
           ) : (
-            feeds.map((feed) => <FeedCard key={feed.id} feed={feed} />)
+            displayedFeeds.map((feed) => <FeedCard key={feed.id} feed={feed} />)
           )}
         </div>
       </div>
