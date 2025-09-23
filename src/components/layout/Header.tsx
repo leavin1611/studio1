@@ -4,23 +4,19 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/common/Logo';
-import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
+import { GoogleTranslateWidget } from '@/components/common/GoogleTranslateWidget';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 import { Menu } from 'lucide-react';
-import { useLanguage } from '@/context/LanguageContext';
-import { translations } from '@/lib/i18n';
 
 export function Header() {
-  const { language } = useLanguage();
-  const t = translations[language];
 
   const navLinks = [
-    { href: '/', label: t.nav.home },
-    { href: '/dashboard', label: t.nav.dashboard },
+    { href: '/', label: 'Home' },
+    { href: '/dashboard', label: 'Dashboard' },
     { href: '/social-intelligence', label: 'Social Intel' },
-    { href: '/report', label: t.nav.reportHazard },
-    { href: '#posts', label: t.nav.posts },
-    { href: '#feeds', label: t.nav.feeds },
+    { href: '/report', label: 'Report Hazard' },
+    { href: '#posts', label: 'Posts' },
+    { href: '#feeds', label: 'Feeds' },
   ];
 
   return (
@@ -41,12 +37,12 @@ export function Header() {
           </nav>
           <div className="hidden lg:flex items-center gap-4">
             <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10" asChild>
-                <Link href="/login">{t.nav.login}</Link>
+                <Link href="/login">Login</Link>
             </Button>
             <Button variant="default" className="bg-white text-primary hover:bg-white/90" asChild>
-                <Link href="/signup">{t.nav.signUp}</Link>
+                <Link href="/signup">Sign Up</Link>
             </Button>
-            <LanguageSwitcher />
+            <GoogleTranslateWidget />
           </div>
           <div className="lg:hidden">
             <Sheet>
@@ -73,12 +69,12 @@ export function Header() {
                 </nav>
                 <div className="flex flex-col gap-4">
                     <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10" asChild>
-                        <Link href="/login">{t.nav.login}</Link>
+                        <Link href="/login">Login</Link>
                     </Button>
                     <Button variant="default" className="bg-white text-primary hover:bg-white/90" asChild>
-                        <Link href="/signup">{t.nav.signUp}</Link>
+                        <Link href="/signup">Sign Up</Link>
                     </Button>
-                    <LanguageSwitcher />
+                    <GoogleTranslateWidget />
                 </div>
                 </div>
               </SheetContent>
@@ -89,4 +85,3 @@ export function Header() {
     </header>
   );
 }
-
