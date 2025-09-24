@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm, Controller } from 'react-hook-form';
@@ -268,3 +269,5 @@ export function ReportHazardForm() {
     </div>
   );
 }
+
+    
