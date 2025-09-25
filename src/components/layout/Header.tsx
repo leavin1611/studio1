@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/common/Logo';
 import { GoogleTranslateWidget } from '@/components/common/GoogleTranslateWidget';
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 import { LogOut, Menu } from 'lucide-react';
 import { useAuth, useUser } from '@/firebase';
 
@@ -79,6 +79,9 @@ export function Header() {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="bg-primary text-primary-foreground border-l-0">
+                <SheetHeader>
+                    <SheetTitle className="text-white">Navigation Menu</SheetTitle>
+                </SheetHeader>
                 <div className="flex flex-col gap-6 pt-10">
                   <nav className="flex flex-col items-start gap-4">
                     {navLinks.map((link) => (
