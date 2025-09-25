@@ -14,6 +14,7 @@ import { useAuth } from '@/firebase';
 import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from 'firebase/auth';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const phoneSchema = z.object({
   phoneNumber: z.string().regex(/^\+[1-9]\d{1,14}$/, 'Phone number must be in E.164 format (e.g., +919876543210)'),
@@ -36,6 +37,7 @@ declare global {
 export function PhoneLoginForm() {
   const auth = useAuth();
   const { toast } = useToast();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
 
@@ -98,9 +100,9 @@ export function PhoneLoginForm() {
       if (result?.user) {
         toast({
           title: 'Login Successful!',
-          description: 'You are now logged in.',
+          description: 'Redirecting to the home page...',
         });
-        // You can add redirection logic here, e.g., router.push('/dashboard')
+        router.push('/');
       } else {
         throw new Error('User not found after confirmation');
       }
