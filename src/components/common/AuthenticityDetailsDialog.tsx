@@ -12,11 +12,12 @@ import { ShieldCheck, Info } from 'lucide-react';
 
 type AuthenticityDetailsDialogProps = {
   text: string;
+  isAuthenticated: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
-export function AuthenticityDetailsDialog({ text, open, onOpenChange }: AuthenticityDetailsDialogProps) {
+export function AuthenticityDetailsDialog({ text, isAuthenticated, open, onOpenChange }: AuthenticityDetailsDialogProps) {
   const [authenticityScore, setAuthenticityScore] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -25,7 +26,7 @@ export function AuthenticityDetailsDialog({ text, open, onOpenChange }: Authenti
       setLoading(true);
       async function getAuthenticity() {
         try {
-          const result = await verifyReportAuthenticity({ text });
+          const result = await verifyReportAuthenticity({ text, isAuthenticated });
           setAuthenticityScore(result.authenticityScore);
         } catch (e) {
           console.error("Failed to verify authenticity:", e);
@@ -36,7 +37,7 @@ export function AuthenticityDetailsDialog({ text, open, onOpenChange }: Authenti
       }
       getAuthenticity();
     }
-  }, [open, text]);
+  }, [open, text, isAuthenticated]);
 
   const getAuthenticityColor = (score: number | null) => {
     if (score === null) return 'bg-gray-400';

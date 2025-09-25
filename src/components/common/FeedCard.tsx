@@ -1,3 +1,4 @@
+
 'use client';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ type Feed = {
   likes: number;
   hashtags: string;
   image_url: string;
+  authenticated: boolean;
 };
 
 type FeedCardProps = {
@@ -71,6 +73,7 @@ export function FeedCard({ feed, onViewDetails }: FeedCardProps) {
       {isDialogOpen && (
          <AuthenticityDetailsDialog
             text={feed.comments || ''}
+            isAuthenticated={feed.authenticated}
             open={isDialogOpen}
             onOpenChange={handleCloseDialog}
         />

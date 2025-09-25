@@ -73,6 +73,7 @@ export function HazardReportCard({ report, onViewDetails }: HazardReportCardProp
     {isDialogOpen && (
         <AuthenticityDetailsDialog
             text={report.description}
+            isAuthenticated={report.verified}
             open={isDialogOpen}
             onOpenChange={setIsDialogOpen}
         />
