@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -17,7 +18,7 @@ export function MapWrapper({ reports }: { reports: HazardReport[] }) {
   
   const [mapView, setMapView] = useState<MapView>('default');
 
-  const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "AIzaSyAwNOYjQTLk42O-JpKHXGvxkraaMU8Oldc";
+  const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   const clearMap = () => {
     if (heatmapLayer.current) {
@@ -67,7 +68,7 @@ export function MapWrapper({ reports }: { reports: HazardReport[] }) {
   
   useEffect(() => {
     const initMap = () => {
-      if (window.google && mapRef.current) {
+      if (window.google?.maps && mapRef.current) {
         mapInstance.current = new window.google.maps.Map(mapRef.current, {
           center: { lat: 10.5, lng: 78.5 },
           zoom: 5,
@@ -97,7 +98,11 @@ export function MapWrapper({ reports }: { reports: HazardReport[] }) {
       }
     };
     
-    if (!window.google) {
+    if (!window.google?.maps) {
+      if (!API_KEY) {
+        console.error("Google Maps API key is missing.");
+        return;
+      }
       const script = document.createElement("script");
       script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=visualization`;
       script.async = true;
