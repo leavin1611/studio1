@@ -80,10 +80,11 @@ export function PhoneLoginForm() {
         description: error.message || 'Failed to send OTP. Please check the number and try again.',
       });
        if (window.recaptchaVerifier) {
-          window.recaptchaVerifier.render().then(function(widgetId) {
-            // @ts-ignore
-            grecaptcha.reset(widgetId);
-          });
+          // @ts-ignore
+          const recaptcha = window.grecaptcha;
+          if (recaptcha && window.recaptchaVerifier.widgetId !== undefined) {
+            recaptcha.reset(window.recaptchaVerifier.widgetId);
+          }
         }
     } finally {
       setIsLoading(false);
