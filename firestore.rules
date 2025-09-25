@@ -1,0 +1,140 @@
+/**
+ * @fileoverview Firestore Security Rules for OceanGuard platform.
+ *
+ * Core Philosophy:
+ * This ruleset enforces a strict user-ownership model for user profiles and their associated data (Aadhar verifications and hazard reports).
+ * Social media posts are publicly readable but writable only with proper authorization (TODO - needs ownership field).
+ *
+ * Data Structure:
+ * - /users/{userId}: Stores user profile data.
+ * - /users/{userId}/aadharVerifications/{verificationId}: Stores Aadhar verification requests for a user.
+ * - /users/{userId}/hazardReports/{hazardReportId}: Stores hazard reports submitted by a user.
+ * - /socialMediaPosts/{socialMediaPostId}: Stores social media posts related to ocean hazards.
+ *
+ * Key Security Decisions:
+ * - Users can only read and write their own profile data and related subcollections.
+ * - Listing all users is disallowed.
+ * - Social media posts are publicly readable, but write access is restricted (TODO - needs ownership field).
+ *
+ * Denormalization for Authorization:
+ * - User-specific data is stored under the /users/{userId} path to avoid needing get() calls for authorization. The user ID is implicit in the path.
+ *
+ * Structural Segregation:
+ * - Social media posts are stored in a separate top-level collection to support public read access without compromising user data.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Protects user profile information. Only the user can read and write their own profile.
+     * @path /users/{userId}
+     * @allow (get, create, update, delete) if the user's auth UID matches the userId.
+     * @deny (get, create, update, delete) if the user's auth UID does not match the userId.
+     * @principle Enforces document ownership for writes.
+     */
+    match /users/{userId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
+      allow get: if isOwner(userId);
+      allow list: if false; // Listing all users is not permitted
+
+      // Self-creation:  A user can create their own profile.  Must validate that the userId in the path
+      // matches the userId in the document.
+      allow create: if isSignedIn() && isOwner(userId) && request.resource.data.id == userId;
+
+      // On Update: Enforce immutability of the id field and ownership
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Protects Aadhar verification requests for users. Only the user can read and write their own verification requests.
+     * @path /users/{userId}/aadharVerifications/{verificationId}
+     * @allow (get, create, update, delete) if the user's auth UID matches the userId.
+     * @deny (get, create, update, delete) if the user's auth UID does not match the userId.
+     * @principle Restricts access to a user's own data tree.
+     */
+    match /users/{userId}/aadharVerifications/{verificationId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+
+      // On Create: Require that the userId matches the userId in the path to the document
+      allow create: if isSignedIn() && isOwner(userId) && request.resource.data.userId == userId;
+
+      // On Update: Enforce immutability of the userId field
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+
+      allow delete: if isExistingOwner(userId);
+    }
+
+     /**
+      * @description Protects hazard reports submitted by users. Only the user can read and write their own hazard reports.
+      * @path /users/{userId}/hazardReports/{hazardReportId}
+      * @allow (get, create, update, delete) if the user's auth UID matches the userId.
+      * @deny (get, create, update, delete) if the user's auth UID does not match the userId.
+      * @principle Restricts access to a user's own data tree.
+      */
+    match /users/{userId}/hazardReports/{hazardReportId} {
+      function isSignedIn() {
+        return request.auth != null;
+      }
+
+      function isOwner(userId) {
+        return request.auth.uid == userId;
+      }
+
+      function isExistingOwner(userId) {
+        return isOwner(userId) && resource != null;
+      }
+
+      allow get: if isOwner(userId);
+      allow list: if isOwner(userId);
+
+      // On Create: Require that the userId matches the userId in the path to the document
+      allow create: if isSignedIn() && isOwner(userId) && request.resource.data.userId == userId;
+
+      // On Update: Enforce immutability of the userId field
+      allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Protects social media posts related to ocean hazards. Allows public read access, but restricts write access to authorized users (TODO - needs ownership field).
+     * @path /socialMediaPosts/{socialMediaPostId}
+     * @allow (get, list) to anyone.
+     * @deny (create, update, delete) to unauthorized users.
+     * @principle Allows public read access for social media posts, but restricts write access to authorized users (TODO - needs ownership field).
+     */
+    match /socialMediaPosts/{socialMediaPostId} {
+      allow get, list: if true;
+
+      // CRITICAL: Cannot implement owner-only writes. The 'SocialMediaPost' entity is missing an 'ownerId' or 'authorId' field.
+      allow create, update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+    }
+  }
+}
