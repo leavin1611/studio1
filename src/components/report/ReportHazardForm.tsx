@@ -16,7 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { useHazardReports } from '@/context/HazardReportsContext';
 import { analyzeReportImage } from '@/ai/flows/analyze-report-image';
-import { useState, useRef, useEffect }d from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { Skeleton } from '../ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
