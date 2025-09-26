@@ -6,98 +6,87 @@ This is a Next.js project created in Firebase Studio. It's a comprehensive platf
 
 The Indian National Centre for Ocean Information Services (INCOIS) provides essential early warnings for ocean hazards but faces a critical gap: a lack of real-time, on-the-ground field reports from citizens. Furthermore, valuable insights from public discussions on social media during these events remain largely untapped. This creates a need for a unified platform to bridge this information gap, aggregate data, and provide a comprehensive operational picture for disaster management.
 
-## Our Solution: The SamudraSetu AI-Powered Intelligence Loop
+## SamudraSetu: System Architecture & Technical Deep Dive
 
-SamudraSetu is an AI-driven platform designed to directly address the INCOIS problem statement by creating a unified intelligence loop. It transforms a disconnected and reactive system into a streamlined, proactive one.
+### 1. Core Mission & The INCOIS Problem Statement
 
-The core of the solution is a **four-stage intelligence loop**:
+SamudraSetu is an AI-driven intelligence platform designed to address a critical gap for the Indian National Centre for Ocean Information Services (INCOIS). The core problems it solves are:
 
-1.  **Report (AI-Assisted Crowdsourcing):**
-    The platform empowers citizens and on-ground personnel to become real-time sensors. The key innovation is the **AI-assisted reporting form**. When a user uploads a photo of a hazard, a powerful multimodal AI model (Google's Gemini) analyzes the image content. It automatically identifies the hazard type (e.g., "coastal flooding"), estimates its severity, and writes a detailed, factual description. This drastically reduces the time and effort required to submit a high-quality report, encouraging more participation and ensuring data is structured and accurate from the very start.
+*   **Lack of Real-time Field Reporting:** INCOIS has sophisticated warning systems but lacks on-the-ground data from citizens to verify and complement its models.
+*   **Untapped Social Media Insights:** Public discussions on social media during hazard events are a rich but unstructured source of information that is largely unused.
+*   **Fragmented Information:** Data is scattered, leading to a delayed and incomplete operational picture for disaster managers.
 
-2.  **Analyze (AI-Powered Verification & Insight):**
-    Once data is collected, it is immediately analyzed for authenticity and context.
-    *   **Authenticity Scoring:** An AI model (BERT), trained specifically to identify misinformation, analyzes the text of each report to generate an authenticity score. This helps to automatically filter out hoaxes and exaggerations, allowing officials to focus on credible threats.
-    *   **Social Media Analysis:** The platform continuously monitors public social media channels. It uses an LLM (Gemini) to analyze public sentiment, identify emerging hazard discussions, and calculate an overall "urgency score" based on the volume and tone of the chatter.
+SamudraSetu solves this by creating a unified, real-time **intelligence loop** that integrates crowdsourced data with AI analysis.
 
-3.  **Visualize (A Unified Dashboard):**
-    SamudraSetu aggregates all verified reports and social media insights into a single, interactive dashboard. The central feature is a live map that plots every incident, offering multiple views like a heatmap (to show hazard density) and marker clustering (to simplify busy areas). This provides everyone from the public to disaster managers with a clear, immediate, and unified operational picture.
+### 2. Technology Stack
 
-4.  **Alert (Actionable Intelligence for Response):**
-    By providing a filtered, verified, and real-time stream of information, the platform equips disaster managers with actionable intelligence. They can move from reacting to scattered information to proactively making data-driven decisions about where and when to issue alerts, deploy resources, or communicate with the public.
+*   **Frontend Framework:** **Next.js with React** (App Router). This provides server-side rendering for fast initial loads and a modern, component-based architecture.
+*   **Language:** **TypeScript**. Used across the entire project for type safety, better developer tooling, and more maintainable code.
+*   **UI Components:** **ShadCN UI**. A collection of beautifully designed, accessible, and composable components built on Radix UI and Tailwind CSS.
+*   **Styling:** **Tailwind CSS** with a custom theme defined in `globals.css` using HSL CSS variables for easy theming (Primary: `#4A90E2`, Accent: `#77D8D8`, etc.).
+*   **AI Backend & Orchestration:** **Google Genkit**. All AI-powered features are implemented as Genkit "flows." This provides a structured way to define and run chains of AI prompts, model calls, and business logic. It runs as a separate server that the Next.js frontend communicates with.
+*   **Authentication & Database:** **Google Firebase**.
+    *   **Firebase Authentication:** Used for secure, OTP-based phone number login, including reCAPTCHA verification.
+    *   **Firestore:** While not fully integrated for backend storage yet, the data structures are designed for it. It's intended to be the primary database for storing user data, reports, and needs requests.
+*   **Mapping:** **Google Maps API**. Used for the interactive dashboard, providing features like custom markers, heatmaps, and marker clustering.
+*   **State Management:** **React Context API**. Used to manage global application state for hazard reports (`HazardReportsContext`) and assistance requests (`NeedsContext`), making data available across all components in real-time.
 
-### How SamudraSetu Addresses the INCOIS Problem
+### 3. Key Features & How They Work (The Intelligence Loop)
 
-*   **Problem 1: Lack of Real-time Field Reporting**
-    *   **Solution:** The **Report a Hazard** page allows any citizen to submit geotagged reports with photos. **AI Image Analysis** makes this process fast and accurate, encouraging participation and providing the high-quality, structured data that INCOIS needs.
+**Stage 1: Report (AI-Assisted Crowdsourcing)**
 
-*   **Problem 2: Untapped Social Media Insights**
-    *   **Solution:** The **Social Intelligence Dashboard** directly addresses this by using an AI (Gemini) to analyze public social media feeds for hazard keywords, trends, and sentiment, providing a real-time pulse on public discussion.
+This is the primary data-gathering stage, designed to be as frictionless as possible.
 
-*   **Problem 3: Fragmented Data**
-    *   **Solution:** The **Live Hazard Dashboard** is the unified platform. It plots both formal crowdsourced reports and social media hotspots on a single, interactive map, creating one common source of truth.
+*   **Feature:** **Report a Hazard Page (`/report`)**
+    *   **Functionality:** Allows any authenticated user to submit a report. It includes two innovative methods for data entry:
+        1.  **Geo-tagged Image Upload:** The user can upload a photo from their device. The system uses the **`exif-js` library** to read the photo's metadata. **Crucially, if the image does not contain GPS coordinates (geo-tag), it is rejected**, ensuring all reports are location-specific.
+        2.  **Live Webcam Capture:** The user can grant camera and location permissions. The form displays a live video feed. When the user clicks "Capture Photo," it takes a snapshot, automatically records the **current date and time**, and captures their precise **geolocation** using the browser's Geolocation API.
+    *   **AI Integration (`analyzeReportImage` flow):** Once an image is captured or uploaded, it's converted to a Base64 Data URI and sent to the `analyzeReportImage` Genkit flow. This flow uses the **Google Gemini Pro Vision model** to analyze the image content. The model returns a structured JSON object with the `hazardType`, `severity`, and a detailed `description`, which automatically pre-fills the form for the user.
 
-*   **Problem 4: Lack of Situational Awareness**
-    *   **Solution:** The platform provides disaster managers with immediate insights into **scale** (via report density), **urgency** (via AI-driven scores), and **sentiment**. Comprehensive **filtering tools** allow officials to drill down by hazard type, location, and date, enabling faster validation of warning models.
+*   **Feature:** **Request Assistance Page (`/needs`)**
+    *   **Functionality:** A separate form for users in an affected area to request specific aid (e.g., Water, Food, Medical, Shelter). It also includes the **webcam and geolocation capture** feature to help responders pinpoint and verify the need.
 
-### Key Innovations
+**Stage 2: Analyze (AI-Powered Verification & Insight)**
 
-*   **AI at the Point of Reporting:** Using AI to auto-fill reports from images, not just for backend analysis.
-*   **Dual-Layer Authenticity:** Combining AI text analysis with human credibility to create a robust verification system.
-*   **Data Fusion:** Uniquely integrating formal crowdsourced reports with unstructured social media intelligence for a complete hazard picture.
+This stage processes and enriches the raw data.
 
-### How SamudraSetu Works: A Detailed Walkthrough
+*   **Algorithm:** **Authenticity Scoring (`verifyReportAuthenticity` flow)**
+    *   **Functionality:** The text description from every hazard report is sent to this Genkit flow. It uses a pre-trained **BERT (Bidirectional Encoder Representations from Transformers) model**, specifically `xenova/bert-base-cased-fakeddit`, which has been fine-tuned to detect patterns of misinformation and fake news.
+    *   **Output:** The flow returns an `authenticityScore` between 0 and 1, providing a probabilistic measure of the report's credibility. This is displayed in the "Authenticity Analysis" dialog.
 
-This description breaks down the entire process from a user's first interaction to the final visualization of their report, detailing the flow of data between the frontend, the AI backend, and external services.
+*   **Algorithm:** **Social Media Trend Analysis (`analyzeSocialMediaTrends` flow)**
+    *   **Functionality:** The Social Intelligence Dashboard (`/social-intelligence`) fetches mock social media data from `ocean_data.json` and feeds it into this Genkit flow.
+    *   **AI Model:** It uses a powerful LLM (like **Gemini**) to perform several tasks in one go:
+        *   **Sentiment Analysis:** Classifies posts as positive, negative, or neutral.
+        *   **Urgency Scoring:** Calculates an "urgency score" based on keywords and sentiment.
+        *   **Topic Extraction:** Identifies key topics and hashtags being discussed.
+        *   **Influence Ranking:** Identifies the most impactful posts based on engagement (likes).
 
-**Step 1: User Authentication**
-*   **Action:** A user visits the SamudraSetu website and clicks the "Login" button.
-*   **Process:**
-    *   They are directed to the `PhoneLoginForm`.
-    *   The user enters their phone number in E.164 format (e.g., +919876543210).
-    *   An invisible **Google reCAPTCHA** is triggered to verify the user is not a bot.
-    *   Upon successful verification, the frontend calls **Firebase Authentication's** `signInWithPhoneNumber` function.
-    *   Firebase sends a one-time password (OTP) to the user's mobile device.
-    *   The user enters the 6-digit OTP, which is then verified by Firebase.
-    *   Upon successful verification, the user is logged in and authenticated for the session.
+**Stage 3: Visualize (A Unified Operational Picture)**
 
-**Step 2: Initiating a Hazard Report**
-*   **Action:** The authenticated user observes a potential hazard and navigates to the "Report a Hazard" page.
-*   **Process:** The `ReportHazardForm` component is rendered, presenting the user with an upload area and a form.
+This stage presents the processed data in an easy-to-understand format.
 
-**Step 3: AI-Powered Image Analysis**
-*   **Action:** The user clicks "Click to upload an image" and selects a photo of the hazard from their device.
-*   **Process:**
-    *   The frontend reads the selected image file.
-    *   It uses the `FileReader` API to convert the image into a **Base64-encoded Data URI**. This is a text string that represents the image (e.g., `data:image/jpeg;base64,...`).
-    *   The frontend makes an API call to the backend **Genkit AI Flow**: `analyzeReportImage`, sending the Data URI as a parameter.
-    *   The Genkit flow forwards the image data and a specific text prompt to the **Google Gemini multimodal model**.
-    *   The Gemini model analyzes the visual content of the image based on the prompt's instructions.
-    *   The model returns a structured **JSON object** containing its analysis, like `{ "hazardType": "flooding", "severity": "high", "description": "Coastal road is submerged..." }`.
+*   **Feature:** **Live Hazard Dashboard (`/dashboard` and homepage)**
+    *   **Functionality:** An interactive dashboard centered around a **Google Map**. It plots all verified and unverified hazard reports. Users can switch between three views:
+        1.  **Default View:** Standard pins for each report.
+        2.  **Heatmap View:** Shows the density of reports, making it easy to spot clusters.
+        3.  **Cluster View:** Groups nearby pins into a single numbered icon for better readability in dense areas, using the **`@googlemaps/markerclusterer`** library.
+    *   **Components:** Includes filter controls (by hazard type, date, etc.) and a live stats panel.
 
-**Step 4: Form Pre-population and User Submission**
-*   **Action:** The user sees the form fields automatically populated and submits the report.
-*   **Process:**
-    *   The frontend receives the JSON response from the Genkit flow.
-    *   It uses this data to **automatically set the values** for the "Hazard Type," "Severity Level," and "Description" fields in the form.
-    *   The user reviews the AI-generated information, manually fills in the remaining fields (Location, Date, Time), and clicks the "Submit Report" button.
+*   **Feature:** **Alerts Feed (`/alerts`)**
+    *   **Functionality:** A dedicated page that combines both official hazard reports and social media posts into a single, reverse-chronological feed, offering a complete, unfiltered view of all incoming information.
 
-**Step 5: Data Processing and Authenticity Verification**
-*   **Action:** The submitted report is processed and verified by the system.
-*   **Process:**
-    *   The new report data is added to the application's central state using the `addReport` function from `HazardReportsContext`. This makes it immediately available to all components.
-    *   Simultaneously, the text from the report's `description` is sent to another Genkit flow: `verifyReportAuthenticity`.
-    *   This flow uses a fine-tuned **BERT model** (`xenova/bert-base-cased-fakeddit`) to analyze the text for patterns of misinformation.
-    *   The BERT model returns an **authenticity score** (e.g., 0.9 for "likely real").
-    *   Based on this score, the report is programmatically marked with a `verified: true` or `verified: false` flag.
+**Stage 4: Alert (Actionable Intelligence for Response)**
 
-**Step 6: Real-time Visualization and Alerting**
-*   **Action:** The newly created and verified report instantly appears on the platform for all users.
-*   **Process:**
-    *   The **Live Hazard Dashboard** automatically re-renders because its data source (`HazardReportsContext`) has been updated.
-    *   The new report appears as a pin on the interactive **Google Map**. The pin's color or icon can reflect its verification status.
-    *   Key statistics on the dashboard, such as "Total Reports" and "Verified Incidents," are updated in real time.
-    *   If the report was successfully verified, a system-wide toast notification is triggered to alert all active users of the new, credible threat.
+This is the final, crucial step where intelligence drives action.
+
+*   **Feature:** **High-Priority Alert Section (Homepage)**
+    *   **Algorithm:** This component has a specific activation logic. It scans all hazard reports and finds one that meets two strict criteria:
+        1.  It is **manually verified** (`verified: true`), implying a disaster manager has confirmed it.
+        2.  Its text content achieves a high **AI authenticity score** (e.g., > 0.75).
+    *   **AI Integration (`generateSafetyPrecautions` flow):** Once such an alert is identified, its `hazardType` and `severity` are sent to this new Genkit flow. This flow uses **Gemini** to generate a practical, easy-to-understand list of **"Do's and Don'ts"** and a concise public safety bulletin.
+    *   **Display:** The resulting alert—containing the location, hazard type, and clear safety instructions—is prominently displayed at the top of the homepage, ensuring it's the first thing visitors see.
+
 
 ## Getting Started Locally
 
