@@ -6,19 +6,34 @@ This is a Next.js project created in Firebase Studio. It's a comprehensive platf
 
 **SamudraSetu** is an AI-driven platform designed to bridge the gap in coastal safety by creating a unified intelligence loop. It addresses the problems of misinformation, slow reporting, and disconnected data by leveraging cutting-edge AI at every step.
 
-*   **The Problem:** Current hazard reporting is chaotic, relying on slow manual processes and unverified social media chatter, which leads to public confusion and delayed responses from authorities.
+### The Problem: A Disconnected & Reactive System
 
-*   **Our Solution (The AI Intelligence Loop):**
-    1.  **Report (AI-Assisted):** Citizens easily report hazards. Our AI (Gemini) analyzes uploaded photos to instantly pre-fill report details, ensuring speed and accuracy.
-    2.  **Analyze (AI-Verified):** A specialized AI (BERT) scores the authenticity of reports to filter out hoaxes, while another AI (Gemini) analyzes social media for public sentiment and urgency.
-    3.  **Visualize (Unified Dashboard):** All verified data is plotted on a single, live map with heatmaps and hotspots, providing a clear and immediate operating picture.
-    4.  **Alert (Actionable Intelligence):** Disaster managers get real-time, verified intelligence, enabling faster and more effective community alerts.
+Current hazard reporting is chaotic and slow. It relies on a fragmented mix of:
+1.  **Public Panic:** Unverified social media posts that spread quickly, often containing misinformation and causing public confusion.
+2.  **Manual Reporting:** Formal reports from eyewitnesses that are slow to be filed and even slower to be verified by authorities.
+3.  **Official Channels:** Limited sensor data that may not capture localized, on-the-ground events in real-time.
 
-*   **Key Innovations:**
-    *   **AI at the Point of Reporting:** Using AI to auto-fill reports from images, not just for backend analysis.
-    *   **Dual-Layer Authenticity:** Combining AI text analysis with human credibility to create a robust verification system.
-    *   **Data Fusion:** Uniquely integrating formal crowdsourced reports with unstructured social media intelligence for a complete hazard picture.
+This fragmented approach leads to critical delays, unreliable information, and an increased risk to coastal communities.
 
+### Our Solution: The SamudraSetu AI-Powered Intelligence Loop
+
+SamudraSetu transforms this chaotic process into a streamlined, four-stage intelligence loop:
+
+1.  **Report (AI-Assisted):** Citizens and on-ground volunteers act as real-time sensors. When a user uploads a photo of a hazard, our AI (using a **Google Gemini** model) instantly analyzes the image to pre-fill the report form with the identified hazard type, severity, and a detailed description. This makes reporting fast, accurate, and easy.
+
+2.  **Analyze (AI-Verified):** To combat misinformation, every report undergoes a dual-layer analysis.
+    *   An AI model (**BERT**, trained on fake news detection) scores the authenticity of the report's text to filter out hoaxes.
+    *   Another AI model (**Gemini**) analyzes public social media feeds to gauge public sentiment and identify emerging trends related to the hazard.
+
+3.  **Visualize (A Unified Dashboard):** All verified reports and social media insights are plotted on a single, live map. With features like heatmaps and marker clustering, it provides an immediate and intuitive operating picture for everyone from the public to disaster managers.
+
+4.  **Alert (Actionable Intelligence):** Disaster managers are equipped with a clear, real-time, and verified stream of intelligence. This allows them to move from reacting to chaos to making proactive, data-driven decisions about issuing alerts and deploying resources, ultimately saving lives and property.
+
+### Key Innovations
+
+*   **AI at the Point of Reporting:** Using AI to auto-fill reports from images, not just for backend analysis.
+*   **Dual-Layer Authenticity:** Combining AI text analysis with human credibility to create a robust verification system.
+*   **Data Fusion:** Uniquely integrating formal crowdsourced reports with unstructured social media intelligence for a complete hazard picture.
 
 ## Getting Started Locally
 
