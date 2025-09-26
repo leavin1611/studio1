@@ -11,14 +11,16 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Upload, BellRing, Bot, Sparkles } from 'lucide-react';
+import { Upload, Bot, Sparkles, Camera, Video, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { useHazardReports } from '@/context/HazardReportsContext';
 import { analyzeReportImage } from '@/ai/flows/analyze-report-image';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { Skeleton } from '../ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 
 const reportSchema = z.object({
   hazardType: z.string().min(1, 'Hazard type is required'),
@@ -37,6 +39,66 @@ export function ReportHazardForm() {
     const { addReport } = useHazardReports();
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+    const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+    const [activeTab, setActiveTab] = useState('upload');
+    
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+
+    useEffect(() => {
+        if (activeTab === 'webcam') {
+            const getCameraAndLocationPermission = async () => {
+                // Get Camera Permission
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    setHasCameraPermission(true);
+                    if (videoRef.current) {
+                        videoRef.current.srcObject = stream;
+                    }
+                } catch (error) {
+                    console.error('Error accessing camera:', error);
+                    setHasCameraPermission(false);
+                    toast({
+                        variant: 'destructive',
+                        title: 'Camera Access Denied',
+                        description: 'Please enable camera permissions to use this feature.',
+                    });
+                }
+
+                // Get Location
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const { latitude, longitude } = position.coords;
+                            form.setValue('location', `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+                            toast({
+                                title: "Location Captured",
+                                description: "Your current location has been filled in.",
+                            });
+                        },
+                        () => {
+                            toast({
+                                variant: 'destructive',
+                                title: 'Location Access Denied',
+                                description: 'Could not fetch location. Please enter it manually.',
+                            });
+                        }
+                    );
+                }
+            };
+            getCameraAndLocationPermission();
+
+            return () => {
+                // Stop camera stream when component unmounts or tab changes
+                if(videoRef.current && videoRef.current.srcObject) {
+                    const stream = videoRef.current.srcObject as MediaStream;
+                    stream.getTracks().forEach(track => track.stop());
+                }
+            }
+        }
+    }, [activeTab]);
+
 
     const form = useForm<z.infer<typeof reportSchema>>({
         resolver: zodResolver(reportSchema),
@@ -51,39 +113,62 @@ export function ReportHazardForm() {
         },
     });
 
-    const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const processImageWithAI = async (photoDataUri: string) => {
+        setIsAnalyzing(true);
+        setUploadedImage(photoDataUri);
+
+        try {
+            const result = await analyzeReportImage({ photoDataUri });
+            form.setValue('hazardType', result.hazardType);
+            form.setValue('severity', result.severity);
+            form.setValue('description', result.description);
+            toast({
+                title: "🤖 AI Analysis Complete",
+                description: "The form has been pre-filled based on your image.",
+            });
+        } catch (error) {
+            console.error("Image analysis failed:", error);
+            toast({
+                variant: "destructive",
+                title: "AI Analysis Failed",
+                description: "Could not analyze the image. Please fill out the form manually.",
+            });
+        } finally {
+            setIsAnalyzing(false);
+        }
+    };
+
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        setIsAnalyzing(true);
-        setUploadedImage(URL.createObjectURL(file));
-
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = async () => {
-            const photoDataUri = reader.result as string;
-
-            try {
-                const result = await analyzeReportImage({ photoDataUri });
-                form.setValue('hazardType', result.hazardType);
-                form.setValue('severity', result.severity);
-                form.setValue('description', result.description);
-                toast({
-                    title: "🤖 AI Analysis Complete",
-                    description: "The form has been pre-filled based on your image.",
-                });
-            } catch (error) {
-                console.error("Image analysis failed:", error);
-                toast({
-                    variant: "destructive",
-                    title: "AI Analysis Failed",
-                    description: "Could not analyze the image. Please fill out the form manually.",
-                });
-            } finally {
-                setIsAnalyzing(false);
-            }
+        reader.onload = () => {
+            processImageWithAI(reader.result as string);
         };
     };
+
+    const handleTakePhoto = () => {
+        if (!videoRef.current || !canvasRef.current) return;
+        
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
+
+        if (!context) return;
+        
+        // Set canvas dimensions to match video
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        // Draw the current video frame onto the canvas
+        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        
+        // Get the image data from the canvas
+        const photoDataUri = canvas.toDataURL('image/jpeg');
+        processImageWithAI(photoDataUri);
+    }
 
     function onSubmit(values: z.infer<typeof reportSchema>) {
         const isVerified = Math.random() > 0.5;
@@ -115,7 +200,6 @@ export function ReportHazardForm() {
         if (isVerified) {
              setTimeout(() => {
                 toast({
-                    variant: "default",
                     title: "🔔 New Verified Hazard Alert!",
                     description: `A new ${newReport.severity} risk ${values.hazardType} has been verified in ${values.location}.`,
                 });
@@ -143,30 +227,59 @@ export function ReportHazardForm() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <div>
                   <Label>Upload Media & Analyze with AI</Label>
-                  <div className="mt-2 flex justify-center rounded-lg border border-dashed border-input px-6 py-10 relative">
-                    {uploadedImage && !isAnalyzing && (
-                        <Image src={uploadedImage} alt="Uploaded hazard" layout="fill" className="object-contain rounded-lg" />
-                    )}
-                    {isAnalyzing && (
-                        <div className="absolute inset-0 bg-background/80 flex flex-col items-center justify-center rounded-lg">
-                            <Bot className="h-12 w-12 text-primary animate-bounce" />
-                            <p className="mt-4 text-sm font-semibold text-primary">AI is analyzing your image...</p>
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-2">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="upload"><Upload className="mr-2 h-4 w-4"/> Upload Image</TabsTrigger>
+                        <TabsTrigger value="webcam"><Camera className="mr-2 h-4 w-4" /> Use Webcam</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="upload">
+                         <div className="mt-2 flex justify-center rounded-lg border border-dashed border-input px-6 py-10 relative">
+                            {uploadedImage && !isAnalyzing && (
+                                <Image src={uploadedImage} alt="Uploaded hazard" layout="fill" className="object-contain rounded-lg" />
+                            )}
+                            {isAnalyzing && (
+                                <div className="absolute inset-0 bg-background/80 flex flex-col items-center justify-center rounded-lg">
+                                    <Bot className="h-12 w-12 text-primary animate-bounce" />
+                                    <p className="mt-4 text-sm font-semibold text-primary">AI is analyzing your image...</p>
+                                </div>
+                            )}
+                             <div className="text-center">
+                                <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
+                                <div className="mt-4 flex text-sm leading-6 text-muted-foreground">
+                                    <Label
+                                    htmlFor="file-upload"
+                                    className="relative cursor-pointer rounded-md bg-background font-semibold text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:text-primary/80"
+                                    >
+                                    <span>Click to upload an image</span>
+                                    <Input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleImageUpload} accept="image/*" />
+                                    </Label>
+                                </div>
+                                <p className="text-xs leading-5 text-muted-foreground">The AI will pre-fill the form for you.</p>
+                                </div>
+                          </div>
+                      </TabsContent>
+                      <TabsContent value="webcam">
+                        <div className="mt-2 rounded-lg border border-input p-2 space-y-4">
+                            <div className="relative aspect-video">
+                                <video ref={videoRef} className="w-full h-full rounded-md bg-muted" autoPlay muted playsInline />
+                                {hasCameraPermission === false && (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-background/80 rounded-md">
+                                        <Alert variant="destructive" className="w-auto">
+                                            <AlertCircle className="h-4 w-4" />
+                                            <AlertTitle>Camera Access Denied</AlertTitle>
+                                            <AlertDescription>Enable camera permissions to use this feature.</AlertDescription>
+                                        </Alert>
+                                    </div>
+                                )}
+                            </div>
+                            <Button type="button" onClick={handleTakePhoto} disabled={!hasCameraPermission || isAnalyzing} className="w-full">
+                                <Video className="mr-2 h-4 w-4" />
+                                Capture Photo & Analyze
+                            </Button>
                         </div>
-                    )}
-                    <div className="text-center">
-                      <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
-                      <div className="mt-4 flex text-sm leading-6 text-muted-foreground">
-                        <Label
-                          htmlFor="file-upload"
-                          className="relative cursor-pointer rounded-md bg-background font-semibold text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:text-primary/80"
-                        >
-                          <span>Click to upload an image</span>
-                          <Input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleImageUpload} accept="image/*" />
-                        </Label>
-                      </div>
-                      <p className="text-xs leading-5 text-muted-foreground">The AI will pre-fill the form for you.</p>
-                    </div>
-                  </div>
+                        <canvas ref={canvasRef} className="hidden" />
+                      </TabsContent>
+                    </Tabs>
                 </div>
                 
                 {isAnalyzing ? (
@@ -269,5 +382,3 @@ export function ReportHazardForm() {
     </div>
   );
 }
-
-    
