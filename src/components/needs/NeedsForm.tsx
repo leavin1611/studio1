@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -9,10 +10,12 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { HeartHandshake } from 'lucide-react';
+import { HeartHandshake, LocateFixed, Video } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { useNeeds } from '@/context/NeedsContext';
+import { useEffect, useRef, useState } from 'react';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 
 const needsSchema = z.object({
   needType: z.string().min(1, 'Need type is required'),
@@ -27,6 +30,8 @@ const needsSchema = z.object({
 export function NeedsForm() {
     const { toast } = useToast();
     const { addNeed } = useNeeds();
+    const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     const form = useForm<z.infer<typeof needsSchema>>({
         resolver: zodResolver(needsSchema),
@@ -38,6 +43,60 @@ export function NeedsForm() {
             isUrgent: false,
         },
     });
+
+    useEffect(() => {
+        const getCameraPermission = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                setHasCameraPermission(true);
+
+                if (videoRef.current) {
+                    videoRef.current.srcObject = stream;
+                }
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                setHasCameraPermission(false);
+            }
+        };
+
+        getCameraPermission();
+        
+        return () => {
+             if(videoRef.current && videoRef.current.srcObject) {
+                const stream = videoRef.current.srcObject as MediaStream;
+                stream.getTracks().forEach(track => track.stop());
+            }
+        }
+    }, []);
+
+    const handleLocationCapture = () => {
+         if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    form.setValue('location', `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+                    toast({
+                        title: "Location Captured",
+                        description: "Your current location has been filled in.",
+                    });
+                },
+                () => {
+                    toast({
+                        variant: 'destructive',
+                        title: 'Location Access Denied',
+                        description: 'Could not fetch location. Please enter it manually.',
+                    });
+                }
+            );
+        } else {
+             toast({
+                variant: 'destructive',
+                title: 'Geolocation Not Supported',
+                description: 'Your browser does not support geolocation.',
+            });
+        }
+    };
+
 
     function onSubmit(values: z.infer<typeof needsSchema>) {
         const newNeed = {
@@ -76,6 +135,26 @@ export function NeedsForm() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 
+                <div className="rounded-lg border border-input p-2 space-y-4">
+                    <div className="relative aspect-video">
+                        <video ref={videoRef} className="w-full h-full rounded-md bg-muted" autoPlay muted playsInline />
+                         {hasCameraPermission === false && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-background/80 rounded-md">
+                                <Alert variant="destructive" className="w-auto">
+                                    <Video className="h-4 w-4" />
+                                    <AlertTitle>Camera Access Required</AlertTitle>
+                                    <AlertDescription>Enable camera permissions to provide a visual of your location.</AlertDescription>
+                                </Alert>
+                            </div>
+                        )}
+                    </div>
+                    <Button type="button" onClick={handleLocationCapture} disabled={hasCameraPermission === false} className="w-full">
+                        <LocateFixed className="mr-2 h-4 w-4" />
+                        Use My Current Location
+                    </Button>
+                </div>
+
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField control={form.control} name="needType" render={({ field }) => (
                         <FormItem>
@@ -97,7 +176,7 @@ export function NeedsForm() {
                      <FormField control={form.control} name="location" render={({ field }) => (
                         <FormItem>
                             <FormLabel>Your Location</FormLabel>
-                            <FormControl><Input placeholder="e.g., Near Marina Beach Lighthouse" {...field} /></FormControl>
+                            <FormControl><Input placeholder="Click button above or enter manually" {...field} /></FormControl>
                             <FormMessage />
                         </FormItem>
                     )} />
