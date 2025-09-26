@@ -1,0 +1,42 @@
+[
+  {
+    "id": "need_1",
+    "user": "Ramesh K.",
+    "timeAgo": "2 hours ago",
+    "needType": "water",
+    "location": "Ennore, Chennai",
+    "description": "Family of 5 without access to clean drinking water since this morning.",
+    "isUrgent": true,
+    "status": "Open"
+  },
+  {
+    "id": "need_2",
+    "user": "Priya S.",
+    "timeAgo": "5 hours ago",
+    "needType": "medical",
+    "location": "Kovalam Beach, Kerala",
+    "description": "Elderly person needs insulin. Cut off from local pharmacy due to flooding.",
+    "isUrgent": true,
+    "status": "In-Progress"
+  },
+  {
+    "id": "need_3",
+    "user": "Volunteer Group A",
+    "timeAgo": "1 day ago",
+    "needType": "food",
+    "location": "Juhu Beach vicinity, Mumbai",
+    "description": "Community kitchen requires more rice and lentils to feed 100+ people.",
+    "isUrgent": false,
+    "status": "Open"
+  },
+  {
+    "id": "need_4",
+    "user": "Anil",
+    "timeAgo": "3 days ago",
+    "needType": "shelter",
+    "location": "Ullal, Mangalore",
+    "description": "House damaged due to coastal erosion. Need temporary shelter for a family of 3.",
+    "isUrgent": false,
+    "status": "Fulfilled"
+  }
+]
