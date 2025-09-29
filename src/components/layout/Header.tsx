@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -21,6 +22,7 @@ export function Header() {
     { href: '/dashboard', label: 'Dashboard' },
     { href: '/alerts', label: 'Alerts' },
     { href: '/social-intelligence', label: 'Social Intel' },
+    { href: '/statistics', label: 'Statistics' },
     { href: '/report', label: 'Report Hazard' },
     { href: '/needs', label: 'Report a Need' },
   ];
