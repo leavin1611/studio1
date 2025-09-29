@@ -1,53 +1,100 @@
-
 {
   "placeholderImages": [
     {
-      "id": "report1",
-      "description": "High waves crashing on a beach.",
-      "imageUrl": "https://picsum.photos/seed/report1/400/200",
-      "imageHint": "waves ocean"
+      "id": "high-waves-mumbai",
+      "description": "High waves crashing over the sea wall at Marine Drive in Mumbai.",
+      "imageUrl": "https://images.unsplash.com/photo-1751738567832-aae9ddbf5dfa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxoaWdoJTIwd2F2ZXN8ZW58MHx8fHwxNzU5MDY3NDM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "high waves"
     },
     {
-      "id": "report2",
-      "description": "A flooded coastal city street.",
-      "imageUrl": "https://picsum.photos/seed/report2/400/200",
-      "imageHint": "flood ocean"
+      "id": "coastal-flooding-chennai",
+      "description": "A flooded coastal street in Chennai after heavy rains and high tide.",
+      "imageUrl": "https://images.unsplash.com/photo-1757445909506-3ba2dc497890?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjb2FzdGFsJTIwZmxvb2R8ZW58MHx8fHwxNzU5MTI0MDA3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coastal flood"
     },
     {
-      "id": "report3",
-      "description": "Dark storm clouds over a turbulent sea.",
-      "imageUrl": "https://picsum.photos/seed/report3/400/200",
+      "id": "storm-surge-odisha",
+      "description": "Dark storm clouds and turbulent, stormy seas off the coast of Odisha.",
+      "imageUrl": "https://images.unsplash.com/photo-1584820537082-8e19daff36bd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzdG9ybXklMjBzZWF8ZW58MHx8fHwxNzU5MDk3Njc1fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "stormy sea"
     },
     {
-      "id": "report4",
-      "description": "Swirling water indicating a strong current.",
-      "imageUrl": "https://picsum.photos/seed/report4/400/200",
-      "imageHint": "ocean current"
+      "id": "dangerous-currents-goa",
+      "description": "A warning sign for rip currents on a beach in Goa.",
+      "imageUrl": "https://images.unsplash.com/photo-1611147134154-f4cea7bf95d8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxyaXAlMjBjdXJyZW50fGVufDB8fHx8MTc1OTEyNDAwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "rip current"
     },
     {
-      "id": "feed1",
-      "description": "A beach in Goa with high tide.",
-      "imageUrl": "https://picsum.photos/seed/feed1/400/300",
-      "imageHint": "beach tide"
+      "id": "beach-erosion-vizag",
+      "description": "A section of an eroded beach cliff near Visakhapatnam.",
+      "imageUrl": "https://images.unsplash.com/photo-1560826206-b99a2efdca36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxiZWFjaCUyMGVyb3Npb258ZW58MHx8fHwxNzU5MTI0MDA3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beach erosion"
     },
     {
-      "id": "feed2",
-      "description": "A surfer riding a wave.",
-      "imageUrl": "https://picsum.photos/seed/feed2/400/300",
-      "imageHint": "surfer wave"
+      "id": "receding-sea-kanyakumari",
+      "description": "The sea has receded unusually far from the shoreline.",
+      "imageUrl": "https://images.unsplash.com/photo-1640282718009-a39bd947000d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxyZWNlZGluZyUyMHNlYXxlbnwwfHx8fDE3NTkxMjQwMDd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "receding sea"
     },
     {
-      "id": "feed3",
-      "description": "Fishing boats docked in a harbor.",
-      "imageUrl": "https://picsum.photos/seed/feed3/400/300",
+      "id": "minor-flooding-kerala",
+      "description": "A waterlogged coastal road in Kerala with minor flooding.",
+      "imageUrl": "https://images.unsplash.com/photo-1595607744758-e50f9a98d44a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtaW5vciUyMGZsb29kfGVufDB8fHx8MTc1OTEyNDAwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "minor flood"
+    },
+    {
+      "id": "tsunami-drill",
+      "description": "People participating in an evacuation drill.",
+      "imageUrl": "https://images.unsplash.com/photo-1623914056903-105b24a171d9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxldmFjdWF0aW9uJTIwZHJpbGx8ZW58MHx8fHwxNzU5MTI0MDA3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "evacuation drill"
+    },
+    {
+      "id": "high-waves-goa",
+      "description": "Tourists watching large waves on a beach in Goa.",
+      "imageUrl": "https://images.unsplash.com/photo-1538567772574-90714bf8a633?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxiZWFjaCUyMHdhdmVzfGVufDB8fHx8MTc1OTA0MTQyNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beach waves"
+    },
+    {
+      "id": "flooding-mumbai-social",
+      "description": "Cars driving through a flooded street in Mumbai.",
+      "imageUrl": "https://images.unsplash.com/photo-1639164631432-fe23c2cfcee7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjaXR5JTIwZmxvb2R8ZW58MHx8fHwxNzU5MTI0MDA3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "city flood"
+    },
+    {
+      "id": "rough-seas-chennai",
+      "description": "Fishing boats pulled ashore due to rough seas in Chennai.",
+      "imageUrl": "https://images.unsplash.com/photo-1559036211-aac71e257f9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmaXNoaW5nJTIwYm9hdHN8ZW58MHx8fHwxNzU5MTI0MDA3fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "fishing boats"
     },
     {
-      "id": "feed4",
-      "description": "City street with cars driving through water.",
-      "imageUrl": "https://picsum.photos/seed/feed4/400/300",
-      "imageHint": "city flood"
+      "id": "erosion-varkala",
+      "description": "The edge of an eroded cliff at Varkala with the sea below.",
+      "imageUrl": "https://images.unsplash.com/photo-1655270112932-f22685757c38?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjb2FzdGFsJTIwZXJvc2lvbnxlbnwwfHx8fDE3NTkxMjQwMDd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coastal erosion"
+    },
+    {
+      "id": "storm-surge-puri",
+      "description": "Waves from a storm surge reaching beachside buildings in Puri.",
+      "imageUrl": "https://images.unsplash.com/photo-1649200885915-c9b748d4a285?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzdG9ybSUyMHN1cmdlfGVufDB8fHx8MTc1OTEyNDAwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "storm surge"
+    },
+    {
+      "id": "receding-tide-andaman",
+      "description": "Vast expanse of seabed exposed due to an unusually low tide in the Andaman Islands.",
+      "imageUrl": "https://images.unsplash.com/photo-1642810050301-1e799cd52848?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bG93JTIwdGlkZXxlbnwwfHx8fDE3NTkxMjQwMDd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "low tide"
+    },
+    {
+      "id": "red-tide-vizag",
+      "description": "Water with a reddish-brown tint indicating an algal bloom.",
+      "imageUrl": "https://images.unsplash.com/photo-1699819897142-674d5615835b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxyZWQlMjB0aWRlfGVufDB8fHx8MTc1OTEyNDAwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "red tide"
+    },
+    {
+      "id": "high-tide-gangasagar",
+      "description": "Crowds of people near the water's edge during a high tide at Ganga Sagar.",
+      "imageUrl": "https://images.unsplash.com/photo-1699154581508-33e32a5de0b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxoaWdoJTIwdGlkZSUyMGZlc3RpdmFsfGVufDB8fHx8MTc1OTEyNDAwOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "high tide festival"
     }
   ]
 }

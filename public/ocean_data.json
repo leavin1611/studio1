@@ -1,135 +1,91 @@
 
 [
-  {
-    "id": 1,
-    "user_handle": "lifeguard_chennai",
-    "hazard_type": "Rip Current",
-    "location_name": "Marina Beach, Chennai",
-    "comments": "Strong rip current observed near the lighthouse. Several swimmers struggling to return to shore. Lifeguards on high alert.",
-    "likes": 152,
-    "hashtags": "#RipCurrent #MarinaBeach #Chennai #OceanSafety",
-    "image_url": "https://picsum.photos/seed/ripcurrent/400/300",
-    "authenticated": true
-  },
-  {
-    "id": 2,
-    "user_handle": "goa_tourist_official",
-    "hazard_type": "Shark Sighting",
-    "location_name": "Calangute Beach, Goa",
-    "comments": "10-foot great white shark attacking swimmers! Blood in water! Emergency! ||| Reporter later admitted to exaggeration.",
-    "likes": 2300,
-    "hashtags": "#SharkAttack #Goa #Emergency #Help",
-    "image_url": "https://picsum.photos/seed/sharkhoax/400/300",
-    "authenticated": false
-  },
-  {
-    "id": 3,
-    "user_handle": "ennore_port_auth",
-    "hazard_type": "Oil Spill",
-    "location_name": "Ennore Port, Chennai",
-    "comments": "Major oil slick spotted near the port area. Dead fish and marine life observed. Strong smell of petroleum across coastal region.",
-    "likes": 845,
-    "hashtags": "#OilSpill #Ennore #Chennai #EnvironmentalHazard",
-    "image_url": "https://picsum.photos/seed/oilspill/400/300",
-    "authenticated": true
-  },
-  {
-    "id": 4,
-    "user_handle": "kerala_local_panic",
-    "hazard_type": "Tsunami Warning",
-    "location_name": "Kovalam Beach, Kerala",
-    "comments": "100-foot waves coming in 10 minutes! Everyone run for your lives! ||| No seismic activity was recorded by authorities.",
-    "likes": 5678,
-    "hashtags": "#Tsunami #Kovalam #EvacuateNOW",
-    "image_url": "https://picsum.photos/seed/tsunamihoax/400/300",
-    "authenticated": false
-  },
-  {
-    "id": 5,
-    "user_handle": "marine_bio_kovalam",
-    "hazard_type": "Harmful Algal Bloom",
-    "location_name": "Kovalam Beach, Kerala",
-    "comments": "Red tide event causing skin irritation among swimmers. Dead fish washing ashore along 2km stretch.",
-    "likes": 321,
-    "hashtags": "#RedTide #AlgalBloom #Kovalam #PublicHealth",
-    "image_url": "https://picsum.photos/seed/redtide/400/300",
-    "authenticated": true
-  },
-  {
-    "id": 6,
-    "user_handle": "mumbai_cleanup_crew",
-    "hazard_type": "Marine Debris",
-    "location_name": "Juhu Beach, Mumbai",
-    "comments": "Large amount of plastic waste and fishing nets washed up after high tide. Cleanup operations underway.",
-    "likes": 489,
-    "hashtags": "#MarineDebris #JuhuBeach #Mumbai #BeachCleanup",
-    "image_url": "https://picsum.photos/seed/marinedebris/400/300",
-    "authenticated": true
-  },
-  {
-    "id": 7,
-    "user_handle": "truth_seeker_mumbai",
-    "hazard_type": "Chemical Pollution",
-    "location_name": "Marine Drive, Mumbai",
-    "comments": "Toxic waste dumping by foreign ships causing mass fish death. Government cover-up! ||| Images found to be from a different location and event.",
-    "likes": 12000,
-    "hashtags": "#CoverUp #MumbaiPollution #Conspiracy",
-    "image_url": "https://picsum.photos/seed/chemhoax/400/300",
-    "authenticated": false
-  },
-  {
-    "id": 8,
-    "user_handle": "varkala_shopkeeper",
-    "hazard_type": "Sneaker Wave",
-    "location_name": "Varkala Cliff Beach, Kerala",
-    "comments": "Unexpected large waves hitting the cliff base. Several tourists' belongings washed away. Warning signs installed.",
-    "likes": 288,
-    "hashtags": "#SneakerWave #Varkala #Kerala #TouristWarning",
-    "image_url": "https://picsum.photos/seed/sneakerwave/400/300",
-    "authenticated": true
-  },
-  {
-    "id": 9,
-    "user_handle": "netrani_diving_co",
-    "hazard_type": "Shark Sighting",
-    "location_name": "Netrani Island, Karnataka",
-    "comments": "Bull shark sighted near popular diving spot. Dive operations temporarily suspended.",
-    "likes": 195,
-    "hashtags": "#SharkSighting #Netrani #DivingSafety #BullShark",
-    "image_url": "https://picsum.photos/seed/bullshark/400/300",
-    "authenticated": true
-  },
-  {
-    "id": 10,
-    "user_handle": "mangaluru_municipality",
-    "hazard_type": "Coastal Erosion",
-    "location_name": "Ullal Beach, Mangalore",
-    "comments": "Monsoon waves causing severe beach erosion. Several beachfront properties at risk.",
-    "likes": 410,
-    "hashtags": "#CoastalErosion #Ullal #Mangalore #Monsoon",
-    "image_url": "https://picsum.photos/seed/erosion/400/300",
-    "authenticated": true
-  },
-  {
-    "id": 11,
-    "user_handle": "ufo_watcher_andaman",
-    "hazard_type": "Alien Ship Sighting",
-    "location_name": "Andaman Sea",
-    "comments": "UFO emerging from ocean! Bright lights and strange sounds! Military cover-up! ||| Video analysis confirmed footage was of a lit-up drone.",
-    "likes": 9500,
-    "hashtags": "#UFO #Andaman #AlienCoverUp",
-    "image_url": "https://picsum.photos/seed/ufohoax/400/300",
-    "authenticated": false
-  },
-  {
-    "id": 12,
-    "user_handle": "havelock_resort_mgr",
-    "hazard_type": "Jellyfish Bloom",
-    "location_name": "Radhanagar Beach, Havelock",
-    "comments": "Blue blubber jellyfish influx. Multiple swimmers reported stings. Medical aid station set up.",
-    "likes": 250,
-    "hashtags": "#Jellyfish #Havelock #Andaman #SwimmerAlert",
-    "image_url": "https://picsum.photos/seed/jellyfish/400/300",
-    "authenticated": true
-  }
-]
+    {
+      "id": 1,
+      "user_handle": "GoaTraveler",
+      "hazard_type": "High Waves",
+      "location_name": "Baga Beach",
+      "comments": "The waves are much higher than usual today at Baga! Be careful if you're swimming. #Goa #HighTide",
+      "likes": 152,
+      "hashtags": "#Goa #HighTide #OceanWarning",
+      "image_url": "https://picsum.photos/seed/high-waves-goa/400/300",
+      "authenticated": false
+    },
+    {
+      "id": 2,
+      "user_handle": "MumbaiWeather",
+      "hazard_type": "Flooding",
+      "location_name": "Marine Drive",
+      "comments": "Water from the sea is overflowing onto Marine Drive. Expect traffic delays. #MumbaiRains #MumbaiFloods",
+      "likes": 780,
+      "hashtags": "#MumbaiRains #MumbaiFloods",
+      "image_url": "https://picsum.photos/seed/flooding-mumbai/400/300",
+      "authenticated": true
+    },
+    {
+      "id": 3,
+      "user_handle": "ChennaiFisherman",
+      "hazard_type": "Rough Seas",
+      "location_name": "Marina Beach",
+      "comments": "Sea is very rough today. No boats are going out. Looks like a storm is brewing. #Chennai #BayOfBengal",
+      "likes": 98,
+      "hashtags": "#Chennai #BayOfBengal #Fisherman",
+      "image_url": "https://picsum.photos/seed/rough-seas-chennai/400/300",
+      "authenticated": true
+    },
+    {
+      "id": 4,
+      "user_handle": "KeralaTourism",
+      "hazard_type": "Coastal Erosion",
+      "location_name": "Varkala",
+      "comments": "Sad to see the erosion at Varkala cliff. The walkway is getting dangerously close to the edge. #Kerala #Varkala",
+      "likes": 340,
+      "hashtags": "#Kerala #Varkala #ClimateChange",
+      "image_url": "https://picsum.photos/seed/erosion-varkala/400/300",
+      "authenticated": false
+    },
+    {
+      "id": 5,
+      "user_handle": "PuriLocal",
+      "hazard_type": "Storm Surge",
+      "location_name": "Puri Beach",
+      "comments": "The sea has come forward by almost 100 feet! Scary situation here in Puri. #CycloneAlert #Odisha",
+      "likes": 1200,
+      "hashtags": "#CycloneAlert #Odisha #Puri",
+      "image_url": "https://picsum.photos/seed/storm-surge-puri/400/300",
+      "authenticated": true
+    },
+    {
+      "id": 6,
+      "user_handle": "AndamanExplorer",
+      "hazard_type": "Unusual Tide",
+      "location_name": "Havelock Island",
+      "comments": "Water receded really far out during low tide today. Never seen it go this far. Is this normal? #Andaman #Tsunami",
+      "likes": 215,
+      "hashtags": "#Andaman #Tsunami #Havelock",
+      "image_url": "https://picsum.photos/seed/receding-tide-andaman/400/300",
+      "authenticated": false
+    },
+    {
+      "id": 7,
+      "user_handle": "VizagNews",
+      "hazard_type": "Discolored Water",
+      "location_name": "Rushikonda Beach",
+      "comments": "Reports of reddish-brown water at Rushikonda. Authorities are investigating. Possibly an algal bloom. #Vizag #RedTide",
+      "likes": 450,
+      "hashtags": "#Vizag #RedTide #AlgalBloom",
+      "image_url": "https://picsum.photos/seed/red-tide-vizag/400/300",
+      "authenticated": true
+    },
+    {
+      "id": 8,
+      "user_handle": "KolkataResident",
+      "hazard_type": "High Tide",
+      "location_name": "Ganga Sagar",
+      "comments": "High tide today during the festival. Water levels are very high but situation is under control. #GangaSagar #HighTide",
+      "likes": 180,
+      "hashtags": "#GangaSagar #HighTide",
+      "image_url": "https://picsum.photos/seed/high-tide-gangasagar/400/300",
+      "authenticated": false
+    }
+  ]
