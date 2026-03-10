@@ -45,7 +45,18 @@ const prompt = ai.definePrompt({
   name: 'analyzeSocialMediaSentimentPrompt',
   input: {schema: AnalyzeSocialMediaSentimentInputSchema},
   output: {schema: AnalyzeSocialMediaSentimentOutputSchema},
-  prompt: `You are an AI that analyzes social media posts to determine the sentiment and urgency of a situation.\n\nAnalyze the following social media posts related to the query "{{query}}" and provide a sentiment analysis, an urgency score, and a summary.\n\nConsider factors such as the tone of the posts, the number of people affected, and the potential for harm.\n\nOutput the sentiment as one of the following values: "positive", "negative", "neutral", or "mixed".\n\nOutput the urgency score as a number between 0 and 1. Higher values indicate greater urgency.\n\nSocial Media Posts:\n[To be populated by social media scraping service]`, // The prompt will be populated by a service that is not built yet.
+  prompt: `You are an AI that analyzes social media posts to determine the sentiment and urgency of a situation.
+
+Analyze the following social media posts related to the query "{{query}}" and provide a sentiment analysis, an urgency score, and a summary.
+
+Consider factors such as the tone of the posts, the number of people affected, and the potential for harm.
+
+Output the sentiment as one of the following values: "positive", "negative", "neutral", or "mixed".
+
+Output the urgency score as a number between 0 and 1. Higher values indicate greater urgency.
+
+Social Media Posts:
+{{query}}`,
 });
 
 const analyzeSocialMediaSentimentFlow = ai.defineFlow(

@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview Analyzes a collection of social media posts to identify trends, sentiment, and key topics.
@@ -69,6 +68,12 @@ Here is the batch of social media posts to analyze:
 {{{posts}}}`,
 });
 
+export async function analyzeSocialMediaTrends(
+  input: AnalyzeSocialMediaTrendsInput
+): Promise<AnalyzeSocialMediaTrendsOutput> {
+  return analyzeSocialMediaTrendsFlow(input);
+}
+
 const analyzeSocialMediaTrendsFlow = ai.defineFlow(
     {
         name: 'analyzeSocialMediaTrendsFlow',
@@ -109,9 +114,3 @@ const analyzeSocialMediaTrendsFlow = ai.defineFlow(
         }
     }
 );
-
-export async function analyzeSocialMediaTrends(
-  input: AnalyzeSocialMediaTrendsInput
-): Promise<AnalyzeSocialMediaTrendsOutput> {
-  return analyzeSocialMediaTrendsFlow(input);
-}
