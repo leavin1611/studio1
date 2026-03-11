@@ -22,15 +22,6 @@ SamudraSetu is built on a modern, robust, and scalable technology stack:
 - **AI Backend:** All AI-powered functionalities are orchestrated by **Google Genkit**, which runs as a dedicated server. It manages calls to **Google Gemini** for multimodal analysis and content generation, and to a local **BERT model** for authenticity scoring.
 - **Backend Services:** User management and authentication are securely handled by **Firebase Authentication**, utilizing OTP-based phone login. **Firestore** is the intended backend database for storing all user data and reports.
 
-## The Core Idea: Solving the INCOIS Problem Statement
-
-**SamudraSetu** is an AI-driven, web-based intelligence platform designed as a direct response to a critical challenge faced by the **Indian National Centre for Ocean Information Services (INCOIS)**. While INCOIS excels at issuing early warnings for ocean hazards using sophisticated models, it operates with two significant information gaps:
-
-1. **A Lack of Real-Time Field Reporting:** Official models cannot be validated or enriched without on-the-ground observations from citizens.
-2. **Untapped Social Media Insights:** Public discussions during hazard events are a rich, unstructured source of real-time information that is largely unused.
-
-SamudraSetu bridges these gaps by creating a unified, real-time **intelligence loop**. It transforms the one-way flow of information (from INCOIS to the public) into a two-way dialogue, empowering citizens to become active participants in disaster risk reduction.
-
 ## RESEARCH AND REFERENCES
 
 1. AI Models & Natural Language Processing

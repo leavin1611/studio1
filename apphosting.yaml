@@ -4,4 +4,12 @@
 runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
-  maxInstances: 1
+  maxInstances: 5
+  # Set memory to handle AI model processing
+  memory: 1Gi
+
+env:
+  - variable: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+    secret: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+  - variable: GEMINI_API_KEY
+    secret: GEMINI_API_KEY
